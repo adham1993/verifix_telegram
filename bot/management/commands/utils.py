@@ -4,6 +4,7 @@ import json
 
 
 def get_language(from_where):
+    print('get_language')
     lan = importlib.import_module("bot.languages." + from_where).words
     return lan
 

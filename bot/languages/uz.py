@@ -16,10 +16,10 @@ words = {
     'sayt_link': "Link",
 
     # home
-    'new_employee': 'Yangi hodim☎️',
-    'old_employee': 'Eski hodim📱',
-    'about_asko': 'Asko Haqida📱',
-    'products': 'Mahsulotlarimiz📱',
+    'filial': 'Filiallar✅',
+    'vacancy': 'Vakasiyalar✅',
+    'contact': 'Kontakt✅',
+    'about_company': 'Kampanya haqida✅',
 
     #operator
     'operator_region': "Viloyatlar bo'limiga qaytish⬆️",

@@ -11,5 +11,4 @@ class FilterLanguage(BaseFilter):
 
     # @abstractmethod
     def filter(self, message):
-
-        return message.text in ['🇺🇿 UZ', '🇷🇺 RU']
+        return message.text in ['🇺🇿 UZ', '🇷🇺 RU', '🇬🇧 EN']

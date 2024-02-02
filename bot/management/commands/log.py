@@ -21,6 +21,7 @@ def log_errors(f):
 
 
 def setLanguage(update, callback, user, flag=False, *args, **kwargs):
+    print('setLanguage')
     chat_id = update.message.chat_id
     message_id = update.message.message_id
     data = eval(str(update.message))

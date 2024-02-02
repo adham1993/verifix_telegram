@@ -19,6 +19,7 @@ def handler(update, callback, user, lan):
 
 @log_errors
 def set_language(update, callback):
+    print('set_language')
     chat_id = update.message.chat_id
     message_id = update.message.message_id
     text = update.message.text

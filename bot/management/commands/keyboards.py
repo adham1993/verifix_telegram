@@ -3,7 +3,7 @@ from telegram import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton, 
 
 def language_menu(lan):
     keyboard = [
-        [KeyboardButton("🇺🇿 UZ"), KeyboardButton("🇷🇺 RU")],
+            [KeyboardButton("🇺🇿 UZ"), KeyboardButton("🇷🇺 RU"), KeyboardButton("🇬🇧 EN")],
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     return reply_markup
@@ -15,5 +15,5 @@ def home_menu(lan):
         [KeyboardButton(lan['contact']), KeyboardButton(lan['about_company'])],
         [KeyboardButton(lan['edit_language'])]
     ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     return reply_markup
