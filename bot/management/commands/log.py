@@ -1,5 +1,5 @@
 from telegram import KeyboardButton, ReplyKeyboardMarkup, ReplyKeyboardRemove
-from bot.models import UserBot
+from bot.models import UserBot, BotToken, UserProfile
 from telegram.ext import ConversationHandler
 from .keyboards import language_menu, home_menu
 import importlib, json
@@ -60,11 +60,17 @@ def autorization(f):
                 message_id = update.message.message_id
             else:
                 chat_id = update.callback_query.message.chat.id
-            activity, _ = UserBot.objects.get_or_create(chat_id=chat_id)
-            user = UserBot.objects.filter(chat_id=chat_id).first()
+            bot_username = callback.bot.username
+            bot_filter = BotToken.objects.filter(username=bot_username).first()
+            user_profile_filter = UserProfile.objects.filter(company=bot_filter.company).first()
+            user = UserBot.objects.filter(chat_id=chat_id, bot_username=bot_username).first()
             if not user:
-                user = UserBot.objects.create_user(chat_id, password=str(chat_id))
-                user.chat_id = chat_id
+                user = UserBot.objects.create(
+                    chat_id=chat_id,
+                    company=bot_filter.company,
+                    user_profile=user_profile_filter,
+                    bot_username=bot_username
+                )
                 user.save()
             is_break = False
             if user.language is None:

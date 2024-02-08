@@ -25,7 +25,7 @@ words = {
     'operator_region': "Viloyatlar bo'limiga qaytish⬆️",
 
     #diller
-    'reception': "Habarni qabul qilish",
+    'reception': "Habarni   qabul qilish",
     'buy': 'Sotib oldi👍',
     'not_buy': 'Sotib olmadi👎',
     'finish_not_buy': 'Jarayonni yakunlash✋',
