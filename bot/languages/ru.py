@@ -21,6 +21,19 @@ words = {
     'contact': 'Контакт✅',
     'about_company': 'О Kампании✅',
 
+    # resume
+    'resume_start': 'Старт',
+    'the_end_language': 'Tugatish ru',
+    'restart_resume': "Qayta to'ldirish ru",
+    'finish_resume': "Yakunlash ru",
+
+    # gender
+    'mail': 'Мужчина',
+    'femail': 'Женщины',
+
+
+
+
     #operator
     'operator_region': "Возвращение в департамент провинций⬆️",
 

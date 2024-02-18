@@ -32,7 +32,8 @@ ALLOWED_HOSTS = []
 APPS = [
     'apps.content',
     'apps.company',
-    'bot'
+    'bot',
+    'apps.main'
 ]
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -41,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'smart_selects',
 ] + APPS
 
 MIDDLEWARE = [

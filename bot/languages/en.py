@@ -21,6 +21,18 @@ words = {
     'contact': 'Contact✅',
     'about_company': 'About Company✅',
 
+    # resume
+    'resume_start': 'Start',
+    'the_end_language': 'Tugatish en',
+    'restart_resume': "Qayta to'ldirish en",
+    'finish_resume': "Yakunlash en",
+
+    # gender
+    'mail': 'Mail',
+    'femail': 'Femail',
+
+
+
     #operator
     'operator_region': "Viloyatlar bo'limiga qaytish⬆️",
 

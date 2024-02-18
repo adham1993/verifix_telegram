@@ -1,14 +1,36 @@
 from .log import log_errors, autorization, setLanguage
+import os
 from datetime import datetime, timedelta
-from bot.models import UserBot
+from bot.models import (
+    UserBot,
+    UserProfile
+)
 from .commands import start
 from .main import (
     regions,
-    filials
+    filials,
+    vacancies,
+    vacancy_detail,
+    resume_start,
+    last_name,
+    middle_name,
+    birthday,
+    candidate_image,
+    main_phone,
+    extra_phone,
+    email,
+    address,
+    legal_address,
+    wage_expectation,
+    node,
+    language_inline_fun,
+    gender
 )
 from apps.company.models import (
     Region,
-    Filial
+    Filial,
+    Vacancy,
+    Candidate
 )
 
 
@@ -24,6 +46,8 @@ def handler(update, callback, user, lan):
         setLanguage(update, callback, user, flag=True)
     elif text == lan['filial']:
         regions(update, callback, user, lan)
+    elif text == lan['resume_start']:
+        resume_start(update, callback, user, lan)
     elif user.type == 'region':
         if text == lan['back']:
             start(update, callback)
@@ -52,8 +76,201 @@ def handler(update, callback, user, lan):
                 else:
                     pass
                 filials(update, callback, user, lan)
+    elif user.type == 'filials':
+        if text == lan['back']:
+            regions(update, callback, user, lan)
+        else:
+            if user.language == 'uz':
+                filial = Filial.objects.filter(name_uz=text).first()
+                if filial:
+                    user.filial = filial
+                    user.save()
+                else:
+                    pass
+                vacancies(update, callback, user, lan)
+            elif user.language == 'ru':
+                filial = Filial.objects.filter(name_ru=text).first()
+                if filial:
+                    user.filial = filial
+                    user.save()
+                else:
+                    pass
+                vacancies(update, callback, user, lan)
+            else:
+                filial = Filial.objects.filter(name_en=text).first()
+                if filial:
+                    user.filial = filial
+                    user.save()
+                else:
+                    pass
+                vacancies(update, callback, user, lan)
+    elif user.type == 'vacancies':
+        if text == lan['back']:
+            filials(update, callback, user, lan)
+        else:
+            if user.language == 'uz':
+                vacancy = Vacancy.objects.filter(name_uz=text).first()
+                if vacancy:
+                    user.vacancy = vacancy
+                    user.save()
+                else:
+                    pass
+                vacancy_detail(update, callback, user, lan)
+            elif user.language == 'ru':
+                vacancy = Vacancy.objects.filter(name_ru=text).first()
+                if vacancy:
+                    user.vacancy = vacancy
+                    user.save()
+                else:
+                    pass
+                vacancy_detail(update, callback, user, lan)
+            else:
+                vacancy = Vacancy.objects.filter(name_en=text).first()
+                if vacancy:
+                    user.vacancy = vacancy
+                    user.save()
+                else:
+                    pass
+                vacancy_detail(update, callback, user, lan)
+    elif user.type == 'vacancy_detail':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            pass
+    elif user.type == 'resume_start':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            user_profile = UserProfile.objects.filter(bot_username=bot_username).first()
+            candidate_filter = Candidate.objects.filter(user_profile=user_profile, vacancy=user.vacancy).first()
+            if not candidate_filter:
+                candidate = Candidate.objects.create(
+                    user_profile=user_profile,
+                    bot_user=user,
+                    company=user.company,
+                    region=user.region,
+                    filial=user.filial,
+                    vacancy=user.vacancy,
+                    first_name=text
+                )
+                candidate.save()
+                user.candidate = candidate
+                user.save()
+            else:
+                pass
+            last_name(update, callback, user, lan)
+    elif user.type == 'last_name':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.last_name = text
+            candidate.save()
+            middle_name(update, callback, user, lan)
+    elif user.type == 'middle_name':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.middle_name = text
+            candidate.save()
+            gender(update, callback, user, lan)
+    elif user.type == 'birthday':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.birthday = text
+            candidate.save()
+            candidate_image(update, callback, user, lan)
+    elif user.type == 'candidate_image':
+        print('ss')
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            print('aaaa')
+            if text:
+                main_phone(update, callback, user, lan)
+            else:
+                image(update, callback, user, lan)
+    elif user.type == 'main_phone':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.main_phone = text
+            candidate.save()
+            extra_phone(update, callback, user, lan)
+    elif user.type == 'extra_phone':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.extra_phone = text
+            candidate.save()
+            email(update, callback, user, lan)
+    elif user.type == 'email':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.email = text
+            candidate.save()
+            address(update, callback, user, lan)
+    elif user.type == 'address':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.address = text
+            candidate.save()
+            legal_address(update, callback, user, lan)
+    elif user.type == 'legal_address':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.legal_address = text
+            candidate.save()
+            wage_expectation(update, callback, user, lan)
+    elif user.type == 'wage_expectation':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.wage_expectation = text
+            candidate.save()
+            node(update, callback, user, lan)
+    elif user.type == 'node':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            candidate.node = text
+            candidate.save()
+            language_inline_fun(update, callback, user, lan)
+    elif user.type == 'language_inline_fun':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            candidate = user.candidate
+            language_inline_fun(update, callback, user, lan)
 
 
+@autorization
+def image(update, callback, user, lan):
+    text = update.message.text
+    bot_username = callback.bot.username
+    candidate = user.candidate
+    file = callback.bot.get_file(update.message.photo[-1].file_id)
+    print(file)
+    directory = 'static/candidate/images/'
+    if not os.path.exists(directory):
+        os.makedirs(directory)
+    candidate.image = file.download(
+        'static/candidate/images/' + str(candidate.first_name) + str(candidate.last_name) + '.jpg')
+    candidate.save()
+    main_phone(update, callback, user, lan)
 
 
 @log_errors
@@ -77,3 +294,4 @@ def set_language(update, callback):
         user.type = 'set_lang'
         user.save()
         start(update, callback)
+

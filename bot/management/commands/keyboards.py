@@ -1,9 +1,15 @@
 from telegram import KeyboardButton, ReplyKeyboardMarkup, InlineKeyboardButton, InlineKeyboardMarkup, ParseMode
 from apps.company.models import (
     Region,
-    Filial
+    Filial,
+    Vacancy
 )
 from bot.models import UserProfile
+from apps.main.models import (
+    Language,
+    LanguageLevel,
+    Education
+)
 
 
 def language_menu(lan):
@@ -27,7 +33,7 @@ def home_menu(lan):
 def regions_button(callback, user, lan):
     # bot_username = callback.bot.username
     # user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-    regions = Region.objects.all()
+    regions = Region.objects.filter(parent__isnull=True)
     keyboard = []
     c = 0
     b = []
@@ -137,5 +143,147 @@ def filials_button(callback, user, lan):
         KeyboardButton(lan['back'])
     ]
     keyboard.append(back)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def vacancies_button(callback, user, lan):
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    filial = user.filial
+    vacancies = Vacancy.objects.filter(user_profile=user_profile_filter, filial=filial)
+    keyboard = []
+    c = 0
+    b = []
+    region_len = len(vacancies)
+    if user.language == 'uz':
+        for vacancies in vacancies:
+            a = KeyboardButton(str(vacancies.name_uz))
+            b.append(a)
+            c += 1
+            if c == 2:
+                keyboard.append(b)
+                b = []
+                c = 0
+                region_len -= 2
+            elif region_len == 1:
+                keyboard.append(b)
+            else:
+                pass
+    elif user.language == 'ru':
+        for vacancies in vacancies:
+            a = KeyboardButton(str(vacancies.name_ru))
+            b.append(a)
+            c += 1
+            if c == 2:
+                keyboard.append(b)
+                b = []
+                c = 0
+                region_len -= 2
+            elif region_len == 1:
+                keyboard.append(b)
+            else:
+                pass
+    else:
+        for vacancies in vacancies:
+            a = KeyboardButton(str(vacancies.name_en))
+            b.append(a)
+            c += 1
+            if c == 2:
+                keyboard.append(b)
+                b = []
+                c = 0
+                region_len -= 2
+            elif region_len == 1:
+                keyboard.append(b)
+            else:
+                pass
+    back = [
+        KeyboardButton(lan['back'])
+    ]
+    keyboard.append(back)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def vacancy_detail_button(lan):
+    keyboard = [
+        [KeyboardButton(lan['resume_start']), KeyboardButton(lan['back'])],
+    ]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+    return reply_markup
+
+
+def footer_button(lan):
+    keyboard = [
+        [KeyboardButton(lan['home_menu']), KeyboardButton(lan['back'])],
+    ]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+    return reply_markup
+
+
+def gender_inline(lan):
+    keyboard = [
+        [InlineKeyboardButton(text=lan['mail'], callback_data="mail"),
+         InlineKeyboardButton(text=lan['femail'], callback_data="femail")],
+    ]
+    reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def language_inline(user, lan):
+    languages = Language.objects.all()
+    languages_level = LanguageLevel.objects.all()
+    keyboard = []
+    for language in languages:
+        key = []
+        if user.language == 'uz':
+            language_inline_button = InlineKeyboardButton(text=language.name_uz, callback_data=str(language.id))
+        elif user.language == 'ru':
+            language_inline_button = InlineKeyboardButton(text=language.name_ru, callback_data=str(language.id))
+        else:
+            language_inline_button = InlineKeyboardButton(text=language.name_en, callback_data=str(language.id))
+        key.append(language_inline_button)
+        for language_level in languages_level:
+            if user.language == 'uz':
+                language_level_inline_button = InlineKeyboardButton(text=language_level.name_uz,
+                                                                    callback_data='a' + str(language_level.id))
+            elif user.language == 'ru':
+                language_level_inline_button = InlineKeyboardButton(text=language_level.name_ru,
+                                                                    callback_data='a' + str(language_level.id))
+            else:
+                language_level_inline_button = InlineKeyboardButton(text=language_level.name_en,
+                                                                    callback_data='a' + str(language_level.id))
+            key.append(language_level_inline_button)
+            user.inline_type = 'language_level'
+            user.save()
+        keyboard.append(key)
+    the_end = [InlineKeyboardButton(text=lan['the_end_language'], callback_data='the_end_language')]
+    keyboard.append(the_end)
+    reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def education_inline(user, lan):
+    educations = Education.objects.all()
+    keyboard = []
+    for education in educations:
+        if user.language == 'uz':
+            language_inline_button = [InlineKeyboardButton(text=education.name_uz, callback_data=str(education.id))]
+        elif user.language == 'ru':
+            language_inline_button = [InlineKeyboardButton(text=education.name_ru, callback_data=str(education.id))]
+        else:
+            language_inline_button = [InlineKeyboardButton(text=education.name_en, callback_data=str(education.id))]
+        keyboard.append(language_inline_button)
+    the_end = [InlineKeyboardButton(text=lan['the_end_language'], callback_data='the_end_education')]
+    keyboard.append(the_end)
+    reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def resume_footer(lan):
+    keyboard = [
+        [KeyboardButton(lan['restart_resume']), KeyboardButton(lan['finish_resume'])],
+    ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     return reply_markup

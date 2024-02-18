@@ -21,6 +21,20 @@ words = {
     'contact': 'Kontakt✅',
     'about_company': 'Kampanya haqida✅',
 
+    #resume
+    'resume_start': 'Boshlash',
+    'the_end_language': 'Tugatish',
+    'restart_resume': "Qayta to'ldirish",
+    'finish_resume': "Yakunlash",
+
+    #gender
+    'mail': 'Erkak',
+    'femail': 'Ayol',
+
+
+
+
+
     #operator
     'operator_region': "Viloyatlar bo'limiga qaytish⬆️",
 

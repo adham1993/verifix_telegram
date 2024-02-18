@@ -3,7 +3,12 @@ from django.contrib.auth.models import User
 from apps.company.models import (
     Company,
     Filial,
-    Region
+    Region,
+    Vacancy,
+    Candidate
+)
+from apps.main.models import (
+    Language
 )
 # Create your models here.
 
@@ -31,6 +36,9 @@ class UserBot(models.Model):
     inline_type = models.CharField(max_length=100, null=True, blank=True)
     filial = models.ForeignKey(Filial, on_delete=models.CASCADE, null=True, blank=True)
     region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True, blank=True)
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, null=True, blank=True)
+    candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, null=True, blank=True)
+    candidate_language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

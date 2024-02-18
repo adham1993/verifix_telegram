@@ -15,13 +15,14 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from django.conf.urls.static import static
 from config import settings
 from bot.management.commands.bot import set_webhook, delete_webhook, webhook
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('chaining/', include('smart_selects.urls')),
     path('webhook/' + settings.TOKEN, webhook),
     path('set-webhook', set_webhook),
     path('delete-webhook', delete_webhook),

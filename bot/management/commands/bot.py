@@ -7,7 +7,7 @@ from django.http import HttpResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
 from .commands import start
-from .messages import handler, set_language
+from .messages import handler, set_language, image
 from .filters import FilterLanguage
 from .callback_queries import callback_query
 from bot.models import BotToken
@@ -27,6 +27,7 @@ def webhook(request):
     # updater.dispatcher.add_handler(MessageHandler(Filters.document, send_document))
     updater.dispatcher.add_handler(MessageHandler(Filters.text, handler))
     updater.dispatcher.add_handler(CallbackQueryHandler(callback_query))
+    updater.dispatcher.add_handler(MessageHandler(Filters.photo, image))
     data = json.loads(request.body.decode("utf-8"))
     update = Update.de_json(data, bot)
     updater.dispatcher.process_update(update)
@@ -97,6 +98,7 @@ class Command(BaseCommand):
         # updater.dispatcher.add_handler(MessageHandler(Filters.document, send_document))
         updater.dispatcher.add_handler(MessageHandler(Filters.text, handler))
         updater.dispatcher.add_handler(CallbackQueryHandler(callback_query))
+        updater.dispatcher.add_handler(MessageHandler(Filters.photo, image))
 
         return updater
 #
