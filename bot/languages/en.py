@@ -16,20 +16,32 @@ words = {
     'sayt_link': "Link",
 
     # home
-    'filial': 'Filials✅',
-    'vacancy': 'Vacancies✅',
+    'vacancy': 'Filials vacancies✅',
+    'main_office': 'Main office vacancies✅',
     'contact': 'Contact✅',
     'about_company': 'About Company✅',
 
     # resume
     'resume_start': 'Start',
+    'resume_start_check_success': 'Yangilash',
     'the_end_language': 'Tugatish en',
     'restart_resume': "Qayta to'ldirish en",
     'finish_resume': "Yakunlash en",
+    'test_start': 'Testni boshlash en',
 
     # gender
     'mail': 'Mail',
     'femail': 'Femail',
+
+    # contact
+    # 'contact_button_msg': "Biz bilan bog'lanish uchun",
+    'instagram': "Instagram",
+    'facebook': "Facebook",
+    'telegram': "Telegram",
+    'linkedin': "Linkedin",
+    'phone_number': "Telefon raqam",
+    'email': "Email",
+
 
 
 

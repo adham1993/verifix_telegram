@@ -45,14 +45,14 @@ class Filial(models.Model):
     code = models.CharField(max_length=50)
 
     def __str__(self):
-        return self.name_uz or self.name_ru or self.name_en
+        return self.name_uz
 
 
 class Vacancy(models.Model):
     user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, related_name='user_profile_vacancy')
-    company = models.ForeignKey(Company, on_delete=models.CASCADE)
-    region = models.ForeignKey(Region, on_delete=models.CASCADE)
-    filial = models.ForeignKey(Filial, on_delete=models.CASCADE)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True, blank=True)
+    filial = models.ManyToManyField(Filial, related_name='vacancy_filial', blank=True)
     name_uz = models.CharField(max_length=128)
     name_ru = models.CharField(max_length=128, null=True, blank=True)
     name_en = models.CharField(max_length=128, null=True, blank=True)
@@ -71,6 +71,7 @@ class Vacancy(models.Model):
     lang_uz = models.CharField(max_length=64, verbose_name='Tillar')
     lang_ru = models.CharField(max_length=64, verbose_name='Languages', null=True, blank=True)
     lang_en = models.CharField(max_length=64, verbose_name='Язикы', null=True, blank=True)
+    main_office = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -106,6 +107,8 @@ class Candidate(models.Model):
 
 class CandidateLanguages(models.Model):
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name='candidate_languages')
+    vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, null=True, blank=True,
+                                related_name='candidate_language_vacancy')
     language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
     language_level = models.ForeignKey(LanguageLevel, on_delete=models.CASCADE, null=True, blank=True)
     # created_at = models.DateTimeField(auto_created=True)

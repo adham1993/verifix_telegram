@@ -16,20 +16,33 @@ words = {
     'sayt_link': "Ссылка",
 
     #home
-    'filial': 'Филиалы✅',
-    'vacancy': 'Вакансии✅',
+    'vacancy': 'Филиалы вакансии✅',
+    'main_office': 'Главни офис вакансии✅',
     'contact': 'Контакт✅',
     'about_company': 'О Kампании✅',
 
     # resume
     'resume_start': 'Старт',
+    'resume_start_check_success': 'Yangilash',
     'the_end_language': 'Tugatish ru',
     'restart_resume': "Qayta to'ldirish ru",
     'finish_resume': "Yakunlash ru",
+    'test_start': 'Testni boshlash ru',
 
     # gender
     'mail': 'Мужчина',
     'femail': 'Женщины',
+
+    # contact
+    # 'contact_button_msg': "Связаться с нами",
+    'instagram': "Инстаграм",
+    'facebook': "Фейсбук",
+    'telegram': "Телеграм",
+    'linkedin': "Линкедин",
+    'phone_number': "Номер телефона",
+    'email': "Эл. адрес",
+
+
 
 
 

@@ -1,7 +1,9 @@
 from apps.content.models import (
     FilialMessage,
     RegionMessage,
-    VacancyMessage
+    VacancyMessage,
+    MainOfficeVacancyMessage,
+    ContactMessage
 )
 from bot.models import UserProfile
 from .keyboards import (
@@ -13,13 +15,21 @@ from .keyboards import (
     gender_inline,
     language_inline,
     education_inline,
-    resume_footer
+    resume_footer,
+    finish_resume_button,
+    main_office_vacancies_button,
+    contact_button,
+    home_menu,
+    check_candidate_button
 )
 from apps.company.models import (
     CandidateLanguages,
+    Candidate
 )
 from apps.main.models import (
-    Education
+    Education,
+    Contact,
+    AboutCompany
 )
 
 
@@ -129,8 +139,43 @@ def vacancy_detail(update, callback, user, lan):
     reply_markup = vacancy_detail_button(lan)
     update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
 
-    user.type = 'vacancy_detail'
-    user.save()
+    if user.vacancy.main_office:
+        user.type = 'vacancy_detail_detail'
+        user.save()
+    else:
+        user.type = 'vacancy_detail'
+        user.save()
+
+
+def check_candidate(update, callback, user, lan):
+    bot_username = callback.bot.username
+    user_profile = UserProfile.objects.filter(bot_username=bot_username).first()
+    candidate_filter = Candidate.objects.filter(user_profile=user_profile, vacancy=user.vacancy).first()
+    if candidate_filter:
+        if user.language == 'ru':
+            reply_text = ("Oldin bu vakansiya uchun otklik qoldirgansiz. Hr hodimlarimiz siz bilan bo'lanishadi. \n\n "
+                          "Malumotlaringizni yangilash imkonyatingiz ham mavjud.")
+        elif user.language == 'en':
+            reply_text = ("Oldin bu vakansiya uchun otklik qoldirgansiz. Hr hodimlarimiz siz bilan bo'lanishadi. \n\n "
+                          "Malumotlaringizni yangilash imkonyatingiz ham mavjud. ru")
+        else:
+            reply_text = ("Oldin bu vakansiya uchun otklik qoldirgansiz. Hr hodimlarimiz siz bilan bo'lanishadi. \n\n "
+                          "Malumotlaringizni yangilash imkonyatingiz ham mavjud. en")
+    else:
+        if user.language == 'ru':
+            reply_text = "Oldin bu vakansiya uchun otklik qoldirmagansiz. Hr hodimlarimiz siz bilan bo'lanishadi. \n\n "
+        elif user.language == 'en':
+            reply_text = "Oldin bu vakansiya uchun otklik qoldirmagansiz. Hr hodimlarimiz siz bilan bo'lanishadi. \n\n ru"
+        else:
+            reply_text = "Oldin bu vakansiya uchun otklik qoldirmagansiz. Hr hodimlarimiz siz bilan bo'lanishadi. \n\n en"
+    reply_markup = check_candidate_button(lan)
+    update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+    if user.vacancy.main_office:
+        user.type = 'check_candidate_main'
+        user.save()
+    else:
+        user.type = 'check_candidate'
+        user.save()
 
 
 def resume_start(update, callback, user, lan):
@@ -358,8 +403,98 @@ def your_resume(update, callback, user, lan):
     reply_markup = resume_footer(lan)
     if candidate.image:
         update.callback_query.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                                  arse_mode='HTML')
+                                                  parse_mode='HTML')
     else:
         update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'your_resume'
+    user.save()
+
+
+def finish_resume(update, callback, user, lan):
+    if user.language == 'uz':
+        reply_text = "Sizning malumotlaringiz qabul qilindi. \n Marhamat sinov testini bajarishingiz mumkin."
+    elif user.language == 'ru':
+        reply_text = "Sizning malumotlaringiz qabul qilindi. \n Marhamat sinov testini bajarishingiz mumkin. ru"
+    else:
+        reply_text = "Sizning malumotlaringiz qabul qilindi. \n Marhamat sinov testini bajarishingiz mumkin.en"
+    reply_markup = finish_resume_button(lan)
+    update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+    user.type = 'finish_resume'
+    user.save()
+
+
+def main_office_vacancies(update, callback, user, lan):
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    vacancy_message = MainOfficeVacancyMessage.objects.filter(user_profile=user_profile_filter).first()
+    if user.language == 'uz':
+        reply_text = vacancy_message.title_uz + '\n\n'
+    elif user.language == 'en':
+        if vacancy_message.title_en:
+            reply_text = vacancy_message.title_en + '\n\n'
+        else:
+            reply_text = vacancy_message.title_uz + '\n\n'
+    else:
+        if vacancy_message.title_ru:
+            reply_text = vacancy_message.title_ru + '\n\n'
+        else:
+            reply_text = vacancy_message.title_uz + '\n\n'
+    image = '{}'.format(vacancy_message.image)
+    reply_markup = main_office_vacancies_button(callback, user, lan)
+    if vacancy_message.image:
+        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
+                                   parse_mode='HTML')
+    else:
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+
+    user.type = 'main_vacancies'
+    user.save()
+
+
+def contact(update, callback, user, lan):
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    contact_message = ContactMessage.objects.filter(user_profile=user_profile_filter).first()
+    if user.language == 'uz':
+        reply_text = contact_message.title_uz + '\n\n'
+    elif user.language == 'uz':
+        reply_text = contact_message.title_ru + '\n\n'
+    else:
+        reply_text = contact_message.title_en + '\n\n'
+    reply_markup = contact_button(lan)
+    image = '{}'.format(contact_message.image)
+    if contact_message.image:
+        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
+                                   parse_mode='HTML')
+    else:
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+    user.type = 'home_menu'
+    user.save()
+
+
+def about_company(update, callback, user, lan):
+    content = AboutCompany.objects.all()
+    content = content[0]
+    if user.language == 'uz':
+        reply_text = content.title_uz + '\n\n' + str(content.link)
+    elif user.language == 'ru':
+        reply_text = content.title_ru + '\n\n' + str(content.link)
+    else:
+        reply_text = content.title_en + '\n\n' + str(content.link)
+    image = '{}'.format(content.image)
+    video = '{}'.format(content.video)
+    reply_markup = home_menu(lan)
+    if content.image and content.video:
+        update.message.reply_video(video=open(video, 'rb'))
+        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
+                                   parse_mode='HTML')
+    elif content.image:
+        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
+                                   parse_mode='HTML')
+    elif content.video:
+        update.message.reply_video(video=open(video, 'rb'), caption=reply_text, reply_markup=reply_markup,
+                                   parse_mode='HTML')
+    else:
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+    user.type = 'home_menu'
     user.save()

@@ -10,6 +10,9 @@ from apps.main.models import (
     LanguageLevel,
     Education
 )
+from apps.main.models import (
+    Contact,
+)
 
 
 def language_menu(lan):
@@ -22,7 +25,7 @@ def language_menu(lan):
 
 def home_menu(lan):
     keyboard = [
-        [KeyboardButton(lan['filial']), KeyboardButton(lan['vacancy'])],
+        [KeyboardButton(lan['vacancy']), KeyboardButton(lan['main_office'])],
         [KeyboardButton(lan['contact']), KeyboardButton(lan['about_company'])],
         [KeyboardButton(lan['edit_language'])]
     ]
@@ -281,9 +284,98 @@ def education_inline(user, lan):
     return reply_markup
 
 
+def check_candidate_button(lan):
+    keyboard = [
+        [KeyboardButton(lan['resume_start_check_success']), KeyboardButton(lan['back'])],
+    ]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
 def resume_footer(lan):
     keyboard = [
         [KeyboardButton(lan['restart_resume']), KeyboardButton(lan['finish_resume'])],
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def finish_resume_button(lan):
+    keyboard = [
+        [KeyboardButton(lan['home_menu']), KeyboardButton(lan['test_start'])],
+    ]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def main_office_vacancies_button(callback, user, lan):
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    vacancies = Vacancy.objects.filter(user_profile=user_profile_filter, main_office=True)
+    keyboard = []
+    c = 0
+    b = []
+    region_len = len(vacancies)
+    if user.language == 'uz':
+        for vacancies in vacancies:
+            a = KeyboardButton(str(vacancies.name_uz))
+            b.append(a)
+            c += 1
+            if c == 2:
+                keyboard.append(b)
+                b = []
+                c = 0
+                region_len -= 2
+            elif region_len == 1:
+                keyboard.append(b)
+            else:
+                pass
+    elif user.language == 'ru':
+        for vacancies in vacancies:
+            a = KeyboardButton(str(vacancies.name_ru))
+            b.append(a)
+            c += 1
+            if c == 2:
+                keyboard.append(b)
+                b = []
+                c = 0
+                region_len -= 2
+            elif region_len == 1:
+                keyboard.append(b)
+            else:
+                pass
+    else:
+        for vacancies in vacancies:
+            a = KeyboardButton(str(vacancies.name_en))
+            b.append(a)
+            c += 1
+            if c == 2:
+                keyboard.append(b)
+                b = []
+                c = 0
+                region_len -= 2
+            elif region_len == 1:
+                keyboard.append(b)
+            else:
+                pass
+    back = [
+        KeyboardButton(lan['back'])
+    ]
+    keyboard.append(back)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def contact_button(lan):
+    contact = Contact.objects.all()
+    contact = contact[0]
+    keyboard = [
+        [InlineKeyboardButton(lan['instagram'], url=contact.instagram),
+         InlineKeyboardButton(lan['facebook'], url=contact.facebook)],
+        [InlineKeyboardButton(lan['telegram'], url=contact.telegram),
+         InlineKeyboardButton(lan['linkedin'], url=contact.linkedin)],
+        [InlineKeyboardButton(str(contact.phone_number), callback_data=str(contact.phone_number))],
+    ]
+
+    reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
     return reply_markup

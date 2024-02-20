@@ -61,3 +61,33 @@ class VacancyMessage(models.Model):
 
     def __str__(self):
         return self.title_uz or self.title_ru
+
+
+class MainOfficeVacancyMessage(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, blank=True)
+    title_uz = models.TextField()
+    title_ru = models.TextField()
+    title_en = models.TextField()
+    image = models.ImageField(upload_to='static/main_office_vacancy_message/images', null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Main office vacancy text'
+        verbose_name_plural = 'Main office vacancy text'
+
+    def __str__(self):
+        return self.title_uz or self.title_ru
+
+
+class ContactMessage(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, blank=True)
+    title_uz = models.TextField()
+    title_ru = models.TextField()
+    title_en = models.TextField()
+    image = models.ImageField(upload_to='static/contact_message/images', null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Contact text'
+        verbose_name_plural = 'Contact text'
+
+    def __str__(self):
+        return self.title_uz or self.title_ru

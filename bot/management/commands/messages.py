@@ -24,7 +24,12 @@ from .main import (
     wage_expectation,
     node,
     language_inline_fun,
-    gender
+    gender,
+    finish_resume,
+    main_office_vacancies,
+    contact,
+    about_company,
+    check_candidate
 )
 from apps.company.models import (
     Region,
@@ -44,10 +49,20 @@ def handler(update, callback, user, lan):
         start(update, callback)
     elif text == lan['edit_language']:
         setLanguage(update, callback, user, flag=True)
-    elif text == lan['filial']:
+    elif text == lan['vacancy']:
         regions(update, callback, user, lan)
     elif text == lan['resume_start']:
+        check_candidate(update, callback, user, lan)
+    elif text == lan['resume_start_check_success']:
         resume_start(update, callback, user, lan)
+    elif text == lan['finish_resume']:
+        finish_resume(update, callback, user, lan)
+    elif text == lan['main_office']:
+        main_office_vacancies(update, callback, user, lan)
+    elif text == lan['contact']:
+        contact(update, callback, user, lan)
+    elif text == lan['about_company']:
+        about_company(update, callback, user, lan)
     elif user.type == 'region':
         if text == lan['back']:
             start(update, callback)
@@ -137,6 +152,16 @@ def handler(update, callback, user, lan):
             vacancies(update, callback, user, lan)
         else:
             pass
+    elif user.type == 'check_candidate':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            pass
+    elif user.type == 'check_candidate_main':
+        if text == lan['back']:
+            main_office_vacancies(update, callback, user, lan)
+        else:
+            pass
     elif user.type == 'resume_start':
         if text == lan['back']:
             vacancies(update, callback, user, lan)
@@ -157,7 +182,8 @@ def handler(update, callback, user, lan):
                 user.candidate = candidate
                 user.save()
             else:
-                pass
+                user.candidate = candidate_filter
+                user.save()
             last_name(update, callback, user, lan)
     elif user.type == 'last_name':
         if text == lan['back']:
@@ -255,6 +281,39 @@ def handler(update, callback, user, lan):
         else:
             candidate = user.candidate
             language_inline_fun(update, callback, user, lan)
+    elif user.type == 'main_vacancies':
+        if text == lan['back']:
+            start(update, callback)
+        else:
+            if user.language == 'uz':
+                vacancy = Vacancy.objects.filter(name_uz=text).first()
+                if vacancy:
+                    user.vacancy = vacancy
+                    user.save()
+                else:
+                    pass
+                vacancy_detail(update, callback, user, lan)
+            elif user.language == 'ru':
+                vacancy = Vacancy.objects.filter(name_ru=text).first()
+                if vacancy:
+                    user.vacancy = vacancy
+                    user.save()
+                else:
+                    pass
+                vacancy_detail(update, callback, user, lan)
+            else:
+                vacancy = Vacancy.objects.filter(name_en=text).first()
+                if vacancy:
+                    user.vacancy = vacancy
+                    user.save()
+                else:
+                    pass
+                vacancy_detail(update, callback, user, lan)
+    elif user.type == 'vacancy_detail_detail':
+        if text == lan['back']:
+            main_office_vacancies(update, callback, user, lan)
+        else:
+            pass
 
 
 @autorization

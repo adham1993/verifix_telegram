@@ -54,6 +54,7 @@ def callback_query(update, callback, user, lan):
             language_level = LanguageLevel.objects.filter(id=language_level_id).first()
             candidate_language_filter = CandidateLanguages.objects.filter(
                 candidate=user.candidate,
+                vacancy=user.vacancy,
                 language=user.candidate_language
             ).first()
             if not candidate_language_filter:
@@ -65,6 +66,7 @@ def callback_query(update, callback, user, lan):
             language_filter = Language.objects.filter(id=int(query.data)).first()
             candidate_language_filter = CandidateLanguages.objects.filter(
                 candidate=user.candidate,
+                vacancy=user.vacancy,
                 language=language_filter
             )
             if candidate_language_filter:
@@ -73,6 +75,7 @@ def callback_query(update, callback, user, lan):
             else:
                 candidate_language_create = CandidateLanguages.objects.create(
                     candidate=user.candidate,
+                    vacancy=user.vacancy,
                     language=language_filter
                 )
                 candidate_language_create.save()
