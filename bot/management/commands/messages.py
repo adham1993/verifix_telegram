@@ -1,6 +1,7 @@
 from .log import log_errors, autorization, setLanguage
 import os
 from datetime import datetime, timedelta
+import re
 from bot.models import (
     UserBot,
     UserProfile
@@ -44,6 +45,12 @@ from apps.main.models import (
 )
 
 
+def is_valid_date_format(date_text):
+    # Regular ifoda orqali "YYYY-MM-DD" formatiga ega bo'lganligini tekshirish
+    date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+    return bool(re.match(date_pattern, date_text))
+
+
 @autorization
 def handler(update, callback, user, lan):
     print('user.type=', user.type)
@@ -71,7 +78,6 @@ def handler(update, callback, user, lan):
     elif text == lan['about_company']:
         about_company(update, callback, user, lan)
     elif text == lan['test_start']:
-        print('aa')
         test_start(update, callback, user, lan)
     elif user.type == 'region':
         if text == lan['back']:
@@ -215,16 +221,25 @@ def handler(update, callback, user, lan):
         if text == lan['back']:
             vacancies(update, callback, user, lan)
         else:
-            candidate = user.candidate
-            candidate.birthday = text
-            candidate.save()
-            candidate_image(update, callback, user, lan)
+            if is_valid_date_format(text):
+                candidate = user.candidate
+                candidate.birthday = text
+                candidate.save()
+                candidate_image(update, callback, user, lan)
+            else:
+                if user.language == 'uz':
+                    error_message = "Tug'ilgan kun formati noto'g'ri. Iltimos, quyidagi formatda kiriting: YYYY-MM-DD"
+                    update.message.reply_text(error_message)
+                elif user.language == 'ru':
+                    error_message = "Формат дня рождения неверен. Пожалуйста, введите в следующем формате: гггг-ММ-ДД"
+                    update.message.reply_text(error_message)
+                else:
+                    error_message = "The birthday format is incorrect. Please enter in the following format: YYYY-MM-DD"
+                    update.message.reply_text(error_message)
     elif user.type == 'candidate_image':
-        print('ss')
         if text == lan['back']:
             vacancies(update, callback, user, lan)
         else:
-            print('aaaa')
             if text:
                 main_phone(update, callback, user, lan)
             else:

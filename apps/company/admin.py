@@ -172,15 +172,42 @@ class CandidateResource(resources.ModelResource):
     region__name_uz = Field(attribute='region__name_uz', column_name='Region')
     filial__name_uz = Field(attribute='filial__name_uz', column_name='Filial')
     vacancy__name_uz = Field(attribute='vacancy__name_uz', column_name='Vacancy')
+    first_name = Field(attribute='first_name', column_name='First Name')
+    last_name = Field(attribute='last_name', column_name='Last Name')
+    middle_name = Field(attribute='middle_name', column_name='Middle Name')
+    gender = Field(attribute='gender', column_name='Gender')
+    birthday = Field(attribute='birthday', column_name='Birthday')
+    main_phone = Field(attribute='main_phone', column_name='Main Phone')
+    extra_phone = Field(attribute='extra_phone', column_name='Extra Phone')
+    email = Field(attribute='email', column_name='Email')
+    address = Field(attribute='address', column_name='Address')
+    legal_address = Field(attribute='legal_address', column_name='Legal Address')
+    wage_expectation = Field(attribute='wage_expectation', column_name='Wage Expectation')
+    node = Field(attribute='node', column_name='Node')
+    language_data = Field(attribute='language_data', column_name='Language Data')
+    education_data = Field(attribute='education_data', column_name='Education Data')
 
     class Meta:
         model = Candidate
         fields = (
-            'id',
             'company__name',
             'region__name_uz',
             'filial__name_uz',
             'vacancy__name_uz',
+            'first_name',
+            'last_name',
+            'middle_name',
+            'gender',
+            'birthday',
+            'main_phone',
+            'extra_phone',
+            'email',
+            'address',
+            'legal_address',
+            'wage_expectation',
+            'node',
+            'language_data',
+            'education_data',
             'add_date'
         )
 

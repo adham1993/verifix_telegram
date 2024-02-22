@@ -23,6 +23,8 @@ import datetime
 @autorization
 def callback_query(update, callback, user, lan):
     query = update.callback_query
+    # user.type = 'education_inline_fun'
+    # user.save()
     print('query', query)
     print('query data', query.data)
     if user.type == 'gender_callback':

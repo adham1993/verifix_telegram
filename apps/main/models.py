@@ -102,6 +102,8 @@ class SuccessCandidate(models.Model):
     wage_expectation = models.CharField(max_length=128,null=True, blank=True, default=0)
     node = models.CharField(max_length=256, null=True, blank=True)
     education = models.ManyToManyField(Education, blank=True)
+    language_data = models.CharField(max_length=256, null=True, blank=True)
+    education_data = models.CharField(max_length=256, null=True, blank=True)
     add_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -130,6 +132,8 @@ class FailedCandidate(models.Model):
     wage_expectation = models.CharField(max_length=128,null=True, blank=True, default=0)
     node = models.CharField(max_length=256, null=True, blank=True)
     education = models.ManyToManyField(Education, blank=True)
+    language_data = models.CharField(max_length=256, null=True, blank=True)
+    education_data = models.CharField(max_length=256, null=True, blank=True)
     add_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):

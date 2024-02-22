@@ -99,6 +99,8 @@ class Candidate(models.Model):
     wage_expectation = models.CharField(max_length=128,null=True, blank=True, default=0)
     node = models.CharField(max_length=256, null=True, blank=True)
     education = models.ManyToManyField(Education, blank=True)
+    language_data = models.CharField(max_length=256, null=True, blank=True)
+    education_data = models.CharField(max_length=256, null=True, blank=True)
     add_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
@@ -111,7 +113,7 @@ class CandidateLanguages(models.Model):
                                 related_name='candidate_language_vacancy')
     language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
     language_level = models.ForeignKey(LanguageLevel, on_delete=models.CASCADE, null=True, blank=True)
-    # created_at = models.DateTimeField(auto_created=True)
+    add_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.candidate.first_name or self.candidate.last_name or self.candidate.middle_name
