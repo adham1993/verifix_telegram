@@ -99,7 +99,7 @@ class Candidate(models.Model):
     wage_expectation = models.CharField(max_length=128,null=True, blank=True, default=0)
     node = models.CharField(max_length=256, null=True, blank=True)
     education = models.ManyToManyField(Education, blank=True)
-    created_at = models.DateTimeField(auto_created=True, null=True, blank=True)
+    add_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.first_name or self.last_name or self.middle_name

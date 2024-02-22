@@ -8,7 +8,9 @@ from apps.company.models import (
     Candidate
 )
 from apps.main.models import (
-    Language
+    Language,
+    Question,
+    Answer
 )
 # Create your models here.
 
@@ -39,6 +41,10 @@ class UserBot(models.Model):
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, null=True, blank=True)
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, null=True, blank=True)
     candidate_language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True)
+    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True)
+    q_number = models.IntegerField(default=0)
+    true_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

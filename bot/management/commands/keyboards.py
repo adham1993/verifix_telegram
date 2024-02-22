@@ -12,6 +12,8 @@ from apps.main.models import (
 )
 from apps.main.models import (
     Contact,
+    Question,
+    Answer
 )
 
 
@@ -212,6 +214,8 @@ def vacancies_button(callback, user, lan):
 def vacancy_detail_button(lan):
     keyboard = [
         [KeyboardButton(lan['resume_start']), KeyboardButton(lan['back'])],
+        # [KeyboardButton(lan['test_start'])],
+
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     return reply_markup
@@ -378,4 +382,39 @@ def contact_button(lan):
     ]
 
     reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def answer_button(user, lan):
+    question = user.question
+    print('qq', question)
+    answers = Answer.objects.filter(question=question)
+    print('an', answers)
+    keyboard = []
+    b = []
+    for answer in answers:
+        if user.language == 'uz':
+            a = KeyboardButton(str(answer.title_uz))
+            b.append(a)
+            keyboard.append(b)
+            b = []
+        elif user.language == 'ru':
+            a = KeyboardButton(str(answer.title_ru))
+            b.append(a)
+            keyboard.append(b)
+            b = []
+        else:
+            a = KeyboardButton(str(answer.title_en))
+            b.append(a)
+            keyboard.append(b)
+            b = []
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def footer_button_finish(lan):
+    keyboard = [
+        [KeyboardButton(lan['home_menu'])]
+    ]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     return reply_markup

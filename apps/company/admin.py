@@ -9,6 +9,10 @@ from .models import (
 )
 from bot.models import UserProfile
 from django.utils.translation import gettext_lazy as _
+from import_export.admin import ImportExportModelAdmin
+from import_export import resources
+from import_export.fields import Field
+
 # Register your models here
 
 
@@ -163,8 +167,27 @@ class VacancyListFilter(admin.SimpleListFilter):
         return queryset
 
 
+class CandidateResource(resources.ModelResource):
+    company__name = Field(attribute='company__name', column_name='Company')
+    region__name_uz = Field(attribute='region__name_uz', column_name='Region')
+    filial__name_uz = Field(attribute='filial__name_uz', column_name='Filial')
+    vacancy__name_uz = Field(attribute='vacancy__name_uz', column_name='Vacancy')
+
+    class Meta:
+        model = Candidate
+        fields = (
+            'id',
+            'company__name',
+            'region__name_uz',
+            'filial__name_uz',
+            'vacancy__name_uz',
+            'add_date'
+        )
+
+
 @admin.register(Candidate)
-class CandidateAdmin(admin.ModelAdmin):
+class CandidateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
+    resource_class = CandidateResource
     list_display = ('id', 'user_profile', 'filial', 'vacancy', 'first_name', 'last_name')
     list_display_links = ('id', 'user_profile', 'filial', 'vacancy', 'first_name', 'last_name')
     list_filter = (FilialListFilter, VacancyListFilter)

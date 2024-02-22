@@ -78,3 +78,59 @@ class AboutCompany(models.Model):
 
     def __str__(self):
         return self.title_uz or self.title_ru
+
+
+class SuccessCandidate(models.Model):
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE,
+                                     related_name='user_profile_success_candidate')
+    bot_user = models.ForeignKey('bot.UserBot', on_delete=models.CASCADE, related_name='success_candidate_user')
+    company = models.ForeignKey('company.Company', on_delete=models.CASCADE, null=True, blank=True)
+    region = models.ForeignKey('company.Region', on_delete=models.CASCADE, null=True, blank=True)
+    filial = models.ForeignKey('company.Filial', on_delete=models.CASCADE, null=True, blank=True)
+    vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE, null=True, blank=True)
+    first_name = models.CharField(max_length=128, null=True, blank=True)
+    last_name = models.CharField(max_length=128, null=True, blank=True)
+    middle_name = models.CharField(max_length=128, null=True, blank=True)
+    gender = models.CharField(max_length=128, null=True, blank=True)
+    birthday = models.DateField(null=True, blank=True)
+    image = models.ImageField(upload_to='static/success_candidate/images', null=True, blank=True)
+    main_phone = models.CharField(max_length=128, null=True, blank=True)
+    extra_phone = models.CharField(max_length=128, null=True, blank=True)
+    email = models.CharField(max_length=128, null=True, blank=True)
+    address = models.CharField(max_length=256, null=True, blank=True)
+    legal_address = models.CharField(max_length=256, null=True, blank=True)
+    wage_expectation = models.CharField(max_length=128,null=True, blank=True, default=0)
+    node = models.CharField(max_length=256, null=True, blank=True)
+    education = models.ManyToManyField(Education, blank=True)
+    add_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.first_name or self.last_name or self.middle_name
+
+
+class FailedCandidate(models.Model):
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE,
+                                     related_name='user_profile_failed_candidate')
+    bot_user = models.ForeignKey('bot.UserBot', on_delete=models.CASCADE, related_name='failed_candidate_user')
+    company = models.ForeignKey('company.Company', on_delete=models.CASCADE, null=True, blank=True)
+    region = models.ForeignKey('company.Region', on_delete=models.CASCADE, null=True, blank=True)
+    filial = models.ForeignKey('company.Filial', on_delete=models.CASCADE, null=True, blank=True)
+    vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE, null=True, blank=True)
+    first_name = models.CharField(max_length=128, null=True, blank=True)
+    last_name = models.CharField(max_length=128, null=True, blank=True)
+    middle_name = models.CharField(max_length=128, null=True, blank=True)
+    gender = models.CharField(max_length=128, null=True, blank=True)
+    birthday = models.DateField(null=True, blank=True)
+    image = models.ImageField(upload_to='static/failed_candidate/images', null=True, blank=True)
+    main_phone = models.CharField(max_length=128, null=True, blank=True)
+    extra_phone = models.CharField(max_length=128, null=True, blank=True)
+    email = models.CharField(max_length=128, null=True, blank=True)
+    address = models.CharField(max_length=256, null=True, blank=True)
+    legal_address = models.CharField(max_length=256, null=True, blank=True)
+    wage_expectation = models.CharField(max_length=128,null=True, blank=True, default=0)
+    node = models.CharField(max_length=256, null=True, blank=True)
+    education = models.ManyToManyField(Education, blank=True)
+    add_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.first_name or self.last_name or self.middle_name

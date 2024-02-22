@@ -20,16 +20,22 @@ from .keyboards import (
     main_office_vacancies_button,
     contact_button,
     home_menu,
-    check_candidate_button
+    check_candidate_button,
+    answer_button,
+    footer_button_finish
 )
 from apps.company.models import (
     CandidateLanguages,
-    Candidate
+    Candidate,
 )
 from apps.main.models import (
     Education,
     Contact,
-    AboutCompany
+    Question,
+    Answer,
+    AboutCompany,
+    SuccessCandidate,
+    FailedCandidate
 )
 
 
@@ -498,3 +504,112 @@ def about_company(update, callback, user, lan):
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'home_menu'
     user.save()
+
+
+def test_start(update, callback, user, lan):
+    print('aaa')
+    vacancy = user.vacancy
+    print(vacancy)
+    print(user.q_number)
+    questions = Question.objects.filter(vacancy=vacancy)
+    print(questions)
+    if user.q_number == len(questions):
+        user.q_number = 0
+        user.true_count = 0
+        user.save()
+        answer_fun(update, callback, user, lan)
+    else:
+        for question in range(user.q_number, len(questions)):
+            if user.language == 'uz':
+                user.question = questions[user.q_number]
+                user.save()
+                reply_text = str(user.q_number + 1) + '. ' + questions[user.q_number].title_uz
+                reply_markup = answer_button(user, lan)
+                update.message.reply_text(text=reply_text, reply_markup=reply_markup)
+                user.q_number += 1
+                user.save()
+                break
+            elif user.language == 'ru':
+                user.question = questions[user.q_number]
+                user.save()
+                reply_text = str(user.q_number + 1) + '. ' + questions[user.q_number].title_ru
+                reply_markup = answer_button(user, lan)
+                update.message.reply_text(text=reply_text, reply_markup=reply_markup)
+                user.question = questions[user.q_number]
+                user.q_number += 1
+                user.save()
+                break
+            else:
+                user.question = questions[user.q_number]
+                user.save()
+                reply_text = str(user.q_number + 1) + '. ' + questions[user.q_number].title_en
+                reply_markup = answer_button(user, lan)
+                update.message.reply_text(text=reply_text, reply_markup=reply_markup)
+                break
+    user.type = 'question'
+    user.save()
+
+
+def answer_fun(update, callback, user, lan):
+    vacancy = user.vacancy
+    candidate = user.candidate
+    questions = Question.objects.filter(vacancy=vacancy)
+    question_count = len(questions)
+    check_result = question_count - user.true_count
+    if check_result >= 2:
+        failed_candidate_create = FailedCandidate.objects.create(
+            user_profile=candidate.user_profile,
+            bot_user=candidate.bot_user,
+            company=candidate.company,
+            region=candidate.region,
+            filial=candidate.filial,
+            vacancy=candidate.vacancy,
+            first_name=candidate.first_name,
+            last_name=candidate.last_name,
+            middle_name=candidate.middle_name,
+            gender=candidate.gender,
+            birthday=candidate.birthday,
+            image=candidate.image,
+            main_phone=candidate.main_phone,
+            extra_phone=candidate.extra_phone,
+            email=candidate.email,
+            address=candidate.address,
+            legal_address=candidate.legal_address,
+            wage_expectation=candidate.wage_expectation,
+            node=candidate.node
+        )
+        failed_candidate_create.save()
+    else:
+        success_candidate_create = SuccessCandidate.objects.create(
+            user_profile=candidate.user_profile,
+            bot_user=candidate.bot_user,
+            company=candidate.company,
+            region=candidate.region,
+            filial=candidate.filial,
+            vacancy=candidate.vacancy,
+            first_name=candidate.first_name,
+            last_name=candidate.last_name,
+            middle_name=candidate.middle_name,
+            gender=candidate.gender,
+            birthday=candidate.birthday,
+            image=candidate.image,
+            main_phone=candidate.main_phone,
+            extra_phone=candidate.extra_phone,
+            email=candidate.email,
+            address=candidate.address,
+            legal_address=candidate.legal_address,
+            wage_expectation=candidate.wage_expectation,
+            node=candidate.node
+        )
+        success_candidate_create.save()
+    if user.language == 'uz':
+        reply_text = "Sizning javoblaringiz qabul qilindi."
+    elif user.language == 'ru':
+        reply_text = "Sizning javoblaringiz qabul qilindi. ru"
+    else:
+        reply_text = "Sizning javoblaringizqabul qilindi. en"
+    reply_markup = footer_button_finish(lan)
+    update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+    user.type = 'answer_fun'
+    user.save()
+

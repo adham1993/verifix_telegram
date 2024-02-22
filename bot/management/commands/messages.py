@@ -29,7 +29,9 @@ from .main import (
     main_office_vacancies,
     contact,
     about_company,
-    check_candidate
+    check_candidate,
+    test_start,
+    answer_fun
 )
 from apps.company.models import (
     Region,
@@ -37,13 +39,18 @@ from apps.company.models import (
     Vacancy,
     Candidate
 )
+from apps.main.models import (
+    Answer
+)
 
 
 @autorization
 def handler(update, callback, user, lan):
-    # print('user.type=', user.type)
+    print('user.type=', user.type)
     chat_id = update.message.chat_id
     text = update.message.text
+    print(text == lan['test_start'])
+    print(text)
     bot_username = callback.bot.username
     if text == lan['home_menu']:
         start(update, callback)
@@ -63,6 +70,9 @@ def handler(update, callback, user, lan):
         contact(update, callback, user, lan)
     elif text == lan['about_company']:
         about_company(update, callback, user, lan)
+    elif text == lan['test_start']:
+        print('aa')
+        test_start(update, callback, user, lan)
     elif user.type == 'region':
         if text == lan['back']:
             start(update, callback)
@@ -314,6 +324,38 @@ def handler(update, callback, user, lan):
             main_office_vacancies(update, callback, user, lan)
         else:
             pass
+    elif user.type == 'question':
+        if text == lan['back']:
+            start(update, callback)
+        else:
+            if user.language == 'uz':
+                answer = Answer.objects.filter(title_uz=text).first()
+                if answer:
+                    if answer.current_answer:
+                        user.true_count += 1
+                    user.answer = answer
+                    user.save()
+                else:
+                    pass
+                test_start(update, callback, user, lan)
+            elif user.language == 'ru':
+                answer = Answer.objects.filter(title_ru=text).first()
+                if answer:
+                    if answer.current_answer:
+                        user.true_count += 1
+                    user.answer = answer
+                    user.save()
+                else:
+                    pass
+                test_start(update, callback, user, lan)
+            else:
+                answer = Answer.objects.filter(title_en=text).first()
+                if answer:
+                    user.answer = answer
+                    user.save()
+                else:
+                    pass
+                test_start(update, callback, user, lan)
 
 
 @autorization
