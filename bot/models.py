@@ -12,6 +12,9 @@ from apps.main.models import (
     Question,
     Answer
 )
+from apps.company.models import (
+    ResumeFilter
+)
 # Create your models here.
 
 
@@ -43,6 +46,7 @@ class UserBot(models.Model):
     candidate_language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True)
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True)
+    resume_filter = models.ForeignKey(ResumeFilter, on_delete=models.CASCADE, null=True, blank=True)
     q_number = models.IntegerField(default=0)
     true_count = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -5,7 +5,11 @@ from .models import (
     Filial,
     Vacancy,
     Candidate,
-    CandidateLanguages
+    CandidateLanguages,
+    ResumeFilter
+)
+from bot.models import (
+    UserBot
 )
 from bot.models import UserProfile
 from django.utils.translation import gettext_lazy as _
@@ -242,3 +246,44 @@ class CandidateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class CandidateLanguageAdmin(admin.ModelAdmin):
     list_display = ('id', 'candidate', 'language')
     list_display_links = ('id', 'candidate', 'language')
+
+
+@admin.register(ResumeFilter)
+class ResumeFilterAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_profile', 'company')
+    list_display_links = ('id', 'user_profile', 'company')
+
+    def get_exclude(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_exclude(request, obj)
+        else:
+            return ('company', 'user_profile', 'bot_user')
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            if user_profile:
+                return queryset.filter(user_profile=user_profile)
+            else:
+                pass
+
+    def save_model(self, request, obj, form, change):
+        if request.user.is_superuser:
+            super().save_model(request, obj, form, change)
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            obj.user_profile = user_profile
+            obj.company = user_profile.company
+            super().save_model(request, obj, form, change)
+
+            user_bot_filter = UserBot.objects.filter(user_profile=user_profile, company=user_profile.company).first()
+            if user_bot_filter:
+                user_bot_filter.resume_filter = obj
+                user_bot_filter.save()
+                obj.bot_user = user_bot_filter
+                obj.save()
+            else:
+                pass

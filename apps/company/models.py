@@ -119,6 +119,31 @@ class CandidateLanguages(models.Model):
         return self.candidate.first_name or self.candidate.last_name or self.candidate.middle_name
 
 
+class ResumeFilter(models.Model):
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE,
+                                     related_name='user_profile_resume_filter')
+    bot_user = models.ForeignKey('bot.UserBot', on_delete=models.CASCADE, null=True, blank=True,
+                                 related_name='bot_user_resume_filter')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    first_name = models.BooleanField(default=False)
+    last_name = models.BooleanField(default=False)
+    middle_name = models.BooleanField(default=False)
+    gender = models.BooleanField(default=False)
+    birthday = models.BooleanField(default=False)
+    image = models.BooleanField(default=False)
+    main_phone = models.BooleanField(default=False)
+    extra_phone = models.BooleanField(default=False)
+    email = models.BooleanField(default=False)
+    address = models.BooleanField(default=False)
+    legal_address = models.BooleanField(default=False)
+    wage_expectation = models.BooleanField(default=False)
+    node = models.BooleanField(default=False)
+    education = models.BooleanField(default=False)
+    add_date = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.company.name or None
+
 
 
 

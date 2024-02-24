@@ -185,16 +185,20 @@ def check_candidate(update, callback, user, lan):
 
 
 def resume_start(update, callback, user, lan):
-    if user.language == 'uz':
-        reply_text = "Ismingini kiriting"
-    elif user.language == 'ru':
-        reply_text = "Введите свое имя"
+    resume_filter = user.resume_filter
+    if resume_filter.first_name:
+        last_name(update, callback, user, lan)
     else:
-        reply_text = "Enter your name"
-    reply_markup = footer_button(lan)
-    update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-    user.type = 'resume_start'
-    user.save()
+        if user.language == 'uz':
+            reply_text = "Ismingini kiriting"
+        elif user.language == 'ru':
+            reply_text = "Введите свое имя"
+        else:
+            reply_text = "Enter your name"
+        reply_markup = footer_button(lan)
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        user.type = 'resume_start'
+        user.save()
 
 
 def last_name(update, callback, user, lan):
