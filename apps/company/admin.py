@@ -6,7 +6,7 @@ from .models import (
     Vacancy,
     Candidate,
     CandidateLanguages,
-    ResumeFilter
+    ResumeFilter,
 )
 from bot.models import (
     UserBot
@@ -279,11 +279,12 @@ class ResumeFilterAdmin(admin.ModelAdmin):
             obj.company = user_profile.company
             super().save_model(request, obj, form, change)
 
-            user_bot_filter = UserBot.objects.filter(user_profile=user_profile, company=user_profile.company).first()
-            if user_bot_filter:
-                user_bot_filter.resume_filter = obj
-                user_bot_filter.save()
-                obj.bot_user = user_bot_filter
-                obj.save()
-            else:
-                pass
+            user_bot_filters = UserBot.objects.filter(user_profile=user_profile, company=user_profile.company)
+            for user_bot_filter in user_bot_filters:
+                if user_bot_filter:
+                    user_bot_filter.resume_filter = obj
+                    user_bot_filter.save()
+                    obj.bot_user = user_bot_filter
+                    obj.save()
+                else:
+                    pass

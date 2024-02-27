@@ -32,7 +32,9 @@ from .main import (
     about_company,
     check_candidate,
     test_start,
-    answer_fun
+    answer_fun,
+    write_question_fun,
+    write_question_start
 )
 from apps.company.models import (
     Region,
@@ -41,12 +43,13 @@ from apps.company.models import (
     Candidate
 )
 from apps.main.models import (
-    Answer
+    Answer,
+    WrittenQuestion,
+    WrittenAnswer
 )
 
 
 def is_valid_date_format(date_text):
-    # Regular ifoda orqali "YYYY-MM-DD" formatiga ega bo'lganligini tekshirish
     date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')
     return bool(re.match(date_pattern, date_text))
 
@@ -79,6 +82,12 @@ def handler(update, callback, user, lan):
         about_company(update, callback, user, lan)
     elif text == lan['test_start']:
         test_start(update, callback, user, lan)
+    elif text == lan['write_question']:
+        write_question_fun(update, callback, user, lan)
+    elif text == lan['write_question_start']:
+        write_question_start(update, callback, user, lan)
+    elif text == lan['finish_back']:
+        finish_resume(update, callback, user, lan)
     elif user.type == 'region':
         if text == lan['back']:
             start(update, callback)
@@ -371,6 +380,71 @@ def handler(update, callback, user, lan):
                 else:
                     pass
                 test_start(update, callback, user, lan)
+    elif user.type == 'write_question_not':
+        if text == lan['back']:
+            finish_resume(update, callback, user, lan)
+        else:
+            pass
+    elif user.type == 'write_question':
+        vacancy = user.vacancy
+        questions = WrittenQuestion.objects.filter(vacancy=vacancy)
+        write_question = questions[user.write_number]
+        if write_question:
+            if user.language == 'uz':
+                write_answer_filter = WrittenAnswer.objects.filter(vacancy=vacancy, candidate=user.candidate)
+                print('write_answer_filter', write_answer_filter)
+                if write_answer_filter:
+                    write_answer = WrittenAnswer.objects.filter(vacancy=vacancy, candidate=user.candidate).first()
+                    write_answer.title_uz += 'Question: ' + write_question.title_uz + '\n' + 'Answer: ' + text + '\n\n'
+                    write_answer.save()
+                else:
+                    write_answer_create = WrittenAnswer.objects.create(
+                        user_profile=user.user_profile,
+                        vacancy=vacancy,
+                        candidate=user.candidate,
+                        write_question=write_question,
+                        title_uz='Question: ' + write_question.title_uz + '\n' + 'Answer: ' + text + '\n\n'
+                    )
+            elif user.language == 'ru':
+                write_answer_filter = WrittenAnswer.objects.filter(vacancy=vacancy, candidate=user.candidate)
+                if write_answer_filter:
+                    write_answer = WrittenAnswer.objects.filter(vacancy=vacancy, candidate=user.candidate).first()
+                    write_answer.title_uz += 'Question: ' + write_question.title_ru + '\n' + 'Answer: ' + text + '\n\n'
+                    write_answer.save()
+                else:
+                    write_answer_create = WrittenAnswer.objects.create(
+                        user_profile=user.user_profile,
+                        vacancy=vacancy,
+                        candidate=user.candidate,
+                        write_question=write_question,
+                        title_uz='Question: ' + write_question.title_ru + '\n' + 'Answer: ' + text + '\n\n'
+                    )
+                    write_answer_create.save()
+            else:
+                write_answer_filter = WrittenAnswer.objects.filter(vacancy=vacancy, candidate=user.candidate)
+                if write_answer_filter:
+                    write_answer = WrittenAnswer.objects.filter(vacancy=vacancy, candidate=user.candidate).first()
+                    write_answer.title_uz += 'Question: ' + write_question.title_en + '\n' + 'Answer: ' + text + '\n\n'
+                    write_answer.save()
+                else:
+                    write_answer_create = WrittenAnswer.objects.create(
+                        user_profile=user.user_profile,
+                        vacancy=vacancy,
+                        candidate=user.candidate,
+                        write_question=write_question,
+                        title_uz='Question: ' + write_question.title_en + '\n' + 'Answer: ' + text + '\n\n'
+                    )
+                    write_answer_create.save()
+            user.write_number += 1
+            user.save()
+            write_question_start(update, callback, user, lan)
+        else:
+            pass
+    elif user.type == 'write_answer':
+        if text == lan['back']:
+            finish_resume(update, callback, user, lan)
+        else:
+            pass
 
 
 @autorization
@@ -379,7 +453,6 @@ def image(update, callback, user, lan):
     bot_username = callback.bot.username
     candidate = user.candidate
     file = callback.bot.get_file(update.message.photo[-1].file_id)
-    print(file)
     directory = 'static/candidate/images/'
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -391,7 +464,6 @@ def image(update, callback, user, lan):
 
 @log_errors
 def set_language(update, callback):
-    print('set_language')
     bot_username = callback.bot.username
     chat_id = update.message.chat_id
     message_id = update.message.message_id

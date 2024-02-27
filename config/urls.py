@@ -23,9 +23,9 @@ from bot.management.commands.bot import set_webhook, delete_webhook, webhook
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('chaining/', include('smart_selects.urls')),
-    path('webhook/' + settings.TOKEN, webhook),
-    path('set-webhook', set_webhook),
-    path('delete-webhook', delete_webhook),
+    path('webhook/<str:token>/', webhook),
+    path('set-webhook/<str:token>/', set_webhook),
+    path('delete-webhook/<str:token>/', delete_webhook),
 
 ]
 

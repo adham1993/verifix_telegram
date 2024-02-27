@@ -16,18 +16,18 @@ words = {
     'sayt_link': "Ссылка",
 
     #home
-    'vacancy': 'Филиалы вакансии✅',
-    'main_office': 'Главни офис вакансии✅',
-    'contact': 'Контакт✅',
-    'about_company': 'О Kампании✅',
+    'vacancy': 'Филиалы вакансии🏚',
+    'main_office': 'Главни офис вакансии🕍',
+    'contact': 'Контакт📞',
+    'about_company': 'О Kампании📜',
 
     # resume
-    'resume_start': 'Старт',
-    'resume_start_check_success': 'Yangilash',
-    'the_end_language': 'Tugatish ru',
-    'restart_resume': "Qayta to'ldirish ru",
-    'finish_resume': "Yakunlash ru",
-    'test_start': 'Testni boshlash ru',
+    'resume_start': 'Старт🚀',
+    'resume_start_check_success': 'Заполнение📝',
+    'the_end_language': 'Отделка✅',
+    'restart_resume': "Qayta to'ldirish♻️",
+    'finish_resume': "Завершение✅",
+    'test_start': 'Запуск теста👈',
 
     # gender
     'mail': 'Мужчина',
@@ -42,25 +42,10 @@ words = {
     'phone_number': "Номер телефона",
     'email': "Эл. адрес",
 
+    # write question
+    'write_question': 'Ответы на вопросы✍️',
+    'write_question_start': "Старт Вапроси👈",
 
-
-
-
-
-    #operator
-    'operator_region': "Возвращение в департамент провинций⬆️",
-
-    # diller
-    'reception': "Получение сообщения",
-    'buy': 'Купил👍',
-    'not_buy': 'NНе купил👎',
-    'finish_not_buy': 'Завершение процесса✋',
-    'diller_messages': 'Сообщения📭',
-
-    #product
-    'input_karzina': "Добавить в корзину🖌",
-    'buy_success': 'Подтверждение ✅',
-    'karzina': 'Карзинка🛒',
-    'delete_karzina': "Удаление из корзины🪮"
+    'finish_back': 'Возвращение⬅️'
 
 }

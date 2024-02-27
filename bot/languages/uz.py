@@ -16,18 +16,18 @@ words = {
     'sayt_link': "Link",
 
     # home
-    'vacancy': 'Filial vakansiyalar✅',
-    'main_office': 'Bosh ofis vakasiyalar✅',
-    'contact': 'Kontakt✅',
-    'about_company': 'Kampanya haqida✅',
+    'vacancy': 'Filial vakansiyalar🏚',
+    'main_office': 'Bosh ofis vakasiyalar🕍',
+    'contact': 'Kontakt📞',
+    'about_company': 'Kampanya haqida📜',
 
     #resume
-    'resume_start': 'Boshlash',
-    'resume_start_check_success': 'Yangilash',
-    'the_end_language': 'Tugatish',
-    'restart_resume': "Qayta to'ldirish",
-    'finish_resume': "Yakunlash",
-    'test_start': 'Testni boshlash',
+    'resume_start': 'Boshlash🚀',
+    'resume_start_check_success': "To'ldirish📝",
+    'the_end_language': 'Tugatish✅',
+    'restart_resume': "Qayta to'ldirish♻️",
+    'finish_resume': "Yakunlash✅",
+    'test_start': 'Testni boshlash👈',
 
     #gender
     'mail': 'Erkak',
@@ -42,24 +42,10 @@ words = {
     'phone_number': "Telefon raqam",
     'email': "Email",
 
+    #write question
+    'write_question': 'Savollarga javob berish✍️',
+    'write_question_start': "Savol javobni boshlash👈",
 
-
-
-
-    #operator
-    'operator_region': "Viloyatlar bo'limiga qaytish⬆️",
-
-    #diller
-    'reception': "Habarni qabul qilish",
-    'buy': 'Sotib oldi👍',
-    'not_buy': 'Sotib olmadi👎',
-    'finish_not_buy': 'Jarayonni yakunlash✋',
-    'diller_messages': 'Habarlar📭',
-
-    #product
-    'input_karzina': "Karzinaga qo'shish🖌",
-    'buy_success': 'Tasdiqlash ✅',
-    'karzina': 'Karzinka🛒',
-    'delete_karzina': "Karzinkadan o'chirish🪮"
+    'finish_back': 'Orqaga qaytish⬅️'
 
 }

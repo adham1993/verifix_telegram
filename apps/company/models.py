@@ -101,7 +101,7 @@ class Candidate(models.Model):
     education = models.ManyToManyField(Education, blank=True)
     language_data = models.CharField(max_length=256, null=True, blank=True)
     education_data = models.CharField(max_length=256, null=True, blank=True)
-    add_date = models.DateTimeField(auto_now=True)
+    add_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.first_name or self.last_name or self.middle_name
@@ -113,7 +113,7 @@ class CandidateLanguages(models.Model):
                                 related_name='candidate_language_vacancy')
     language = models.ForeignKey(Language, on_delete=models.CASCADE, null=True, blank=True)
     language_level = models.ForeignKey(LanguageLevel, on_delete=models.CASCADE, null=True, blank=True)
-    add_date = models.DateTimeField(auto_now=True)
+    add_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.candidate.first_name or self.candidate.last_name or self.candidate.middle_name
@@ -138,8 +138,9 @@ class ResumeFilter(models.Model):
     legal_address = models.BooleanField(default=False)
     wage_expectation = models.BooleanField(default=False)
     node = models.BooleanField(default=False)
+    language = models.BooleanField(default=False)
     education = models.BooleanField(default=False)
-    add_date = models.DateTimeField(auto_now=True)
+    add_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.company.name or None

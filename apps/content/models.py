@@ -91,3 +91,18 @@ class ContactMessage(models.Model):
 
     def __str__(self):
         return self.title_uz or self.title_ru
+
+
+class WriteQuestionMessage(models.Model):
+    user_profile = models.ForeignKey(UserProfile, on_delete=models.CASCADE, null=True, blank=True)
+    title_uz = models.TextField()
+    title_ru = models.TextField()
+    title_en = models.TextField()
+    image = models.ImageField(upload_to='static/write_question_message/images', null=True, blank=True)
+
+    class Meta:
+        verbose_name = 'Write Question text'
+        verbose_name_plural = 'Write Question text'
+
+    def __str__(self):
+        return self.title_uz or self.title_ru

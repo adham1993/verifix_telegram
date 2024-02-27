@@ -13,15 +13,15 @@ from .callback_queries import callback_query
 from bot.models import BotToken
 
 
+WEBHOOK_URL_BASE = "https://telegram.greenwhite.uz/webhook/"
+
+
 @csrf_exempt
-def webhook(request):
-    bot = Bot(
-        token=settings.TOKEN,
-    )
-    updater = Updater(
-        bot=bot,
-        use_context=True,
-    )
+def webhook(request, token):
+    bot_token = BotToken.objects.get(token=token)
+    bot = Bot(token=bot_token.token)
+    updater = Updater(bot=bot, use_context=True)
+
     updater.dispatcher.add_handler(CommandHandler('start', start))
     updater.dispatcher.add_handler(MessageHandler(FilterLanguage(), set_language))
     # updater.dispatcher.add_handler(MessageHandler(Filters.document, send_document))
@@ -35,27 +35,31 @@ def webhook(request):
     return HttpResponse("ok")
 
 
-def set_webhook(request):
-    bot = Bot(
-        token=settings.TOKEN,
+def set_webhook(request, token):
+    print(token)
+    bot_token = BotToken.objects.get(token=token)
+    bot = Bot(token=bot_token.token)
+    updater = Updater(bot=bot, use_context=True)
+
+    port = 8000 + bot_token.id
+
+    webhook_url = f"{WEBHOOK_URL_BASE}{bot_token.token}/"
+    updater.bot.set_webhook(
+        listen="127.0.0.1",
+        port=port,
+        url_path=bot_token.token,
+        key="/etc/letsencrypt/live/telegram.greenwhite.uz/privkey.pem",
+        cert="/etc/letsencrypt/live/telegram.greenwhite.uz/fullchain.pem",
+        webhook_url=webhook_url
     )
-    updater = Updater(
-        bot=bot,
-        use_context=True,
-    )
-    updater.bot.set_webhook("https://bot.miniature.uz" + "/webhook/" + settings.TOKEN)
-    return HttpResponse("https://bot.miniature.uz" + "/webhook/" + settings.TOKEN)
+
+    return HttpResponse(webhook_url)
 
 
-def delete_webhook(request):
-    bot = Bot(
-        token=settings.TOKEN,
-    )
-
-    updater = Updater(
-        bot=bot,
-        use_context=True,
-    )
+def delete_webhook(request, token):
+    bot_token = BotToken.objects.get(token=token)
+    bot = Bot(token=bot_token.token)
+    updater = Updater(bot=bot, use_context=True)
 
     updater.bot.delete_webhook()
     return HttpResponse("ok")
@@ -66,18 +70,16 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         bots = BotToken.objects.all()
-        updater_list = []  # Bu ro'yxatda har bir bot uchun Updater obyektlarini saqlaymiz
+        updater_list = []
 
         for bot_info in bots:
             bot_token = bot_info.token
             updater = self.create_updater(bot_token)
             updater_list.append(updater)
 
-        # Barcha botlarni bir vaqtda ishga tushiramiz
         for updater in updater_list:
             updater.start_polling()
 
-        # Barcha botlar tugaganida ishni yakunlaymiz
         for updater in updater_list:
             updater.idle()
 

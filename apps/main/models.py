@@ -138,3 +138,29 @@ class FailedCandidate(models.Model):
 
     def __str__(self):
         return self.first_name or self.last_name or self.middle_name
+
+
+class WrittenQuestion(models.Model):
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True)
+    vacancy = models.ManyToManyField('company.Vacancy')
+    title_uz = models.TextField()
+    title_ru = models.TextField()
+    title_en = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title_uz or self.title_ru
+
+
+class WrittenAnswer(models.Model):
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True)
+    vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE)
+    candidate = models.ForeignKey('company.Candidate', on_delete=models.CASCADE)
+    write_question = models.ForeignKey(WrittenQuestion, on_delete=models.CASCADE)
+    title_uz = models.TextField()
+    title_ru = models.TextField()
+    title_en = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.title_uz or self.title_ru

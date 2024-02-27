@@ -15,7 +15,12 @@ class UserBotAdmin(admin.ModelAdmin):
     list_display = ('id', 'user_profile', 'company', 'username', 'chat_id', 'full_name', )
     list_display_links = ('id', 'username', 'chat_id', 'full_name', )
     search_fields = ('username', 'full_name', 'chat_id')
-    exclude = ('user_profile', 'company')
+
+    def get_exclude(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_exclude(request, obj)
+        else:
+            return ('user_profile', 'company')
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)

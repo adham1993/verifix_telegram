@@ -8,7 +8,9 @@ from .models import (
     AboutCompany,
     Contact,
     SuccessCandidate,
-    FailedCandidate
+    FailedCandidate,
+    WrittenQuestion,
+    WrittenAnswer
 )
 from bot.models import (
     UserProfile
@@ -413,5 +415,81 @@ class FailedCandidateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
             user_profile = UserProfile.objects.get(user=request.user)
             obj.user_profile = user_profile
             obj.company = user_profile.company
+            super().save_model(request, obj, form, change)
+
+
+@admin.register(WrittenQuestion)
+class WrittenQuestionAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_profile', 'title_uz')
+    list_display_links = ('id', 'user_profile', 'title_uz')
+    list_filter = (VacancyListFilter, )
+
+    def get_exclude(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_exclude(request, obj)
+        else:
+            return ('user_profile', )
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name == 'vacancy' and not request.user.is_superuser:
+            user_profile = UserProfile.objects.get(user=request.user)
+            kwargs["queryset"] = Vacancy.objects.filter(user_profile=user_profile)
+        return super().formfield_for_manytomany(db_field, request, **kwargs)
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            if user_profile:
+                return queryset.filter(user_profile=user_profile)
+            else:
+                pass
+
+    def save_model(self, request, obj, form, change):
+        if request.user.is_superuser:
+            super().save_model(request, obj, form, change)
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            obj.user_profile = user_profile
+            super().save_model(request, obj, form, change)
+
+
+@admin.register(WrittenAnswer)
+class WrittenAnswerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user_profile', 'vacancy', 'title_uz')
+    list_display_links = ('id', 'user_profile', 'vacancy', 'title_uz')
+    list_filter = (VacancyListFilter, )
+
+    def get_exclude(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_exclude(request, obj)
+        else:
+            return ('user_profile', 'vacancy')
+
+    def formfield_for_foreignkey(self, db_field, request, **kwargs):
+        if db_field.name == 'write_question' and not request.user.is_superuser:
+            user_profile = UserProfile.objects.get(user=request.user)
+            kwargs["queryset"] = WrittenQuestion.objects.filter(user_profile=user_profile)
+        return super().formfield_for_foreignkey(db_field, request, **kwargs)
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            if user_profile:
+                return queryset.filter(user_profile=user_profile)
+            else:
+                pass
+
+    def save_model(self, request, obj, form, change):
+        if request.user.is_superuser:
+            super().save_model(request, obj, form, change)
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            obj.user_profile = user_profile
             super().save_model(request, obj, form, change)
 

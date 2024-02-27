@@ -1,14 +1,14 @@
 words = {
 
     #start
-    'home_menu': "Bosh sahifaga o'tish ⛺️",
-    'start_msg': "📲👇 Kerakli bolgan bo'limni tanlang",
-    'home_button': "🏠️ Bosh sahifa",
-    'back': 'Orqaga⬅️',
+    'home_menu': "Home page ⛺️",
+    'start_msg': "📲👇 Select the section you want",
+    'home_button': "🏠️ Home page ",
+    'back': 'Back⬅️',
 
     #langulage
-    "select_language": "Tilni tanlang 👇",
-    'select_lang': "🇺🇿 🏪  Iltimos, tilni talang 👇",
+    "select_language": "Choose a language 👇",
+    'select_lang': "🇺🇿 🏪  Please talang language 👇",
     'lang': 'uz',
     'edit_language': "Change language🌎",
 
@@ -16,18 +16,18 @@ words = {
     'sayt_link': "Link",
 
     # home
-    'vacancy': 'Filials vacancies✅',
-    'main_office': 'Main office vacancies✅',
-    'contact': 'Contact✅',
-    'about_company': 'About Company✅',
+    'vacancy': 'Filials vacancies🏚',
+    'main_office': 'Main office vacancies🕍',
+    'contact': 'Contact📞',
+    'about_company': 'About Company📜',
 
     # resume
-    'resume_start': 'Start',
-    'resume_start_check_success': 'Yangilash',
-    'the_end_language': 'Tugatish en',
-    'restart_resume': "Qayta to'ldirish en",
-    'finish_resume': "Yakunlash en",
-    'test_start': 'Testni boshlash en',
+    'resume_start': 'Start🚀',
+    'resume_start_check_success': 'Fill📝',
+    'the_end_language': 'Finish✅',
+    'restart_resume': "Qayta to'ldirish♻️",
+    'finish_resume': "Finish✅",
+    'test_start': 'Start testing👈',
 
     # gender
     'mail': 'Mail',
@@ -42,23 +42,10 @@ words = {
     'phone_number': "Telefon raqam",
     'email': "Email",
 
+    # write question
+    'write_question': 'Answering questions✍️',
+    'write_question_start': "Start questions👈",
 
-
-
-    #operator
-    'operator_region': "Viloyatlar bo'limiga qaytish⬆️",
-
-    #diller
-    'reception': "Habarni   qabul qilish",
-    'buy': 'Sotib oldi👍',
-    'not_buy': 'Sotib olmadi👎',
-    'finish_not_buy': 'Jarayonni yakunlash✋',
-    'diller_messages': 'Habarlar📭',
-
-    #product
-    'input_karzina': "Karzinaga qo'shish🖌",
-    'buy_success': 'Tasdiqlash ✅',
-    'karzina': 'Karzinka🛒',
-    'delete_karzina': "Karzinkadan o'chirish🪮"
+    'finish_back': 'Back to back⬅️'
 
 }

@@ -10,7 +10,9 @@ from apps.company.models import (
 from apps.main.models import (
     Language,
     Question,
-    Answer
+    Answer,
+    WrittenQuestion,
+    WrittenAnswer
 )
 from apps.company.models import (
     ResumeFilter
@@ -47,8 +49,11 @@ class UserBot(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, null=True, blank=True)
     answer = models.ForeignKey(Answer, on_delete=models.CASCADE, null=True, blank=True)
     resume_filter = models.ForeignKey(ResumeFilter, on_delete=models.CASCADE, null=True, blank=True)
+    write_question = models.ForeignKey(WrittenQuestion, on_delete=models.CASCADE, null=True, blank=True)
+    write_answer = models.ForeignKey(WrittenAnswer, on_delete=models.CASCADE, null=True, blank=True)
     q_number = models.IntegerField(default=0)
     true_count = models.IntegerField(default=0)
+    write_number = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

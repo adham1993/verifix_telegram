@@ -274,14 +274,16 @@ def language_inline(user, lan):
 def education_inline(user, lan):
     educations = Education.objects.all()
     keyboard = []
+    a = []
     for education in educations:
         if user.language == 'uz':
-            language_inline_button = [InlineKeyboardButton(text=education.name_uz, callback_data=str(education.id))]
+            language_inline_button = InlineKeyboardButton(text=education.name_uz, callback_data=str(education.id))
         elif user.language == 'ru':
-            language_inline_button = [InlineKeyboardButton(text=education.name_ru, callback_data=str(education.id))]
+            language_inline_button = InlineKeyboardButton(text=education.name_ru, callback_data=str(education.id))
         else:
-            language_inline_button = [InlineKeyboardButton(text=education.name_en, callback_data=str(education.id))]
-        keyboard.append(language_inline_button)
+            language_inline_button = InlineKeyboardButton(text=education.name_en, callback_data=str(education.id))
+        a.append(language_inline_button)
+    keyboard.append(a)
     the_end = [InlineKeyboardButton(text=lan['the_end_language'], callback_data='the_end_education')]
     keyboard.append(the_end)
     reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -306,7 +308,8 @@ def resume_footer(lan):
 
 def finish_resume_button(lan):
     keyboard = [
-        [KeyboardButton(lan['home_menu']), KeyboardButton(lan['test_start'])],
+        [KeyboardButton(lan['write_question']), KeyboardButton(lan['test_start'])],
+        [KeyboardButton(lan['home_menu'])],
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     return reply_markup
@@ -387,9 +390,7 @@ def contact_button(lan):
 
 def answer_button(user, lan):
     question = user.question
-    print('qq', question)
     answers = Answer.objects.filter(question=question)
-    print('an', answers)
     keyboard = []
     b = []
     for answer in answers:
@@ -417,4 +418,20 @@ def footer_button_finish(lan):
         [KeyboardButton(lan['home_menu'])]
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+    return reply_markup
+
+
+def write_question_button(lan):
+    keyboard = [
+        [KeyboardButton(lan['write_question_start'])]
+    ]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
+    return reply_markup
+
+
+def footer_back_button(lan):
+    keyboard = [
+        [KeyboardButton(lan['finish_back'])]
+    ]
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     return reply_markup
