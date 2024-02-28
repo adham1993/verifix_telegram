@@ -20,8 +20,9 @@ class Company(models.Model):
 
 
 class Region(models.Model):
-    # user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, related_name='user_profile_region')
-    # company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True,
+                                     related_name='user_profile_region')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='children')
     name_uz = models.CharField(max_length=128)
     name_ru = models.CharField(max_length=128, null=True, blank=True)
@@ -108,6 +109,9 @@ class Candidate(models.Model):
 
 
 class CandidateLanguages(models.Model):
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True,
+                                     related_name='user_profile_candidate_language')
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     candidate = models.ForeignKey(Candidate, on_delete=models.CASCADE, related_name='candidate_languages')
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE, null=True, blank=True,
                                 related_name='candidate_language_vacancy')

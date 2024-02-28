@@ -36,9 +36,9 @@ def home_menu(lan):
 
 
 def regions_button(callback, user, lan):
-    # bot_username = callback.bot.username
-    # user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-    regions = Region.objects.filter(parent__isnull=True)
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    regions = Region.objects.filter(user_profile=user_profile_filter, parent__isnull=True)
     keyboard = []
     c = 0
     b = []
@@ -238,9 +238,11 @@ def gender_inline(lan):
     return reply_markup
 
 
-def language_inline(user, lan):
-    languages = Language.objects.all()
-    languages_level = LanguageLevel.objects.all()
+def language_inline(callback, user, lan):
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    languages = Language.objects.filter(user_profile=user_profile_filter)
+    languages_level = LanguageLevel.objects.filter(user_profile=user_profile_filter)
     keyboard = []
     for language in languages:
         key = []
@@ -271,8 +273,10 @@ def language_inline(user, lan):
     return reply_markup
 
 
-def education_inline(user, lan):
-    educations = Education.objects.all()
+def education_inline(callback, user, lan):
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    educations = Education.objects.filter(user_profile=user_profile_filter)
     keyboard = []
     a = []
     for education in educations:

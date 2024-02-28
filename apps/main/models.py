@@ -3,6 +3,8 @@ from django.db import models
 
 
 class Education(models.Model):
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True)
+    vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE)
     name_uz = models.CharField(max_length=64)
     name_ru = models.CharField(max_length=64)
     name_en = models.CharField(max_length=64)
@@ -13,6 +15,8 @@ class Education(models.Model):
 
 
 class LanguageLevel(models.Model):
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True)
+    vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE)
     name_uz = models.CharField(max_length=64)
     name_ru = models.CharField(max_length=64)
     name_en = models.CharField(max_length=64)
@@ -22,6 +26,8 @@ class LanguageLevel(models.Model):
 
 
 class Language(models.Model):
+    user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True)
+    vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE)
     name_uz = models.CharField(max_length=64)
     name_ru = models.CharField(max_length=64)
     name_en = models.CharField(max_length=64)

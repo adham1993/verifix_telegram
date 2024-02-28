@@ -421,7 +421,7 @@ def language_inline_fun(update, callback, user, lan):
             reply_text = "Установите язык и уровень, который вы знаете👇👇"
         else:
             reply_text = "Mark the language and level you know👇👇"
-        reply_markup = language_inline(user, lan)
+        reply_markup = language_inline(callback, user, lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'language_inline_fun'
         user.save()
@@ -438,7 +438,7 @@ def education_inline_fun(update, callback, user, lan):
             reply_text = "Установите свой уровень знаний"
         else:
             reply_text = "Set your level of knowledge"
-        reply_markup = education_inline(user, lan)
+        reply_markup = education_inline(callback, user, lan)
         if resume_filter.language:
             update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         else:

@@ -100,20 +100,98 @@ class QuestionListFilter(admin.SimpleListFilter):
 
 @admin.register(Education)
 class EducationAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name_uz', 'name_ru')
+    list_display = ('id', 'name_uz', 'name_ru', 'company', 'user_profile')
     list_display_links = ('id', 'name_uz', 'name_ru')
+
+    def get_exclude(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_exclude(request, obj)
+        else:
+            return ('user_profile', 'company', )
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            if user_profile:
+                return queryset.filter(user_profile=user_profile)
+            else:
+                pass
+
+    def save_model(self, request, obj, form, change):
+        if request.user.is_superuser:
+            super().save_model(request, obj, form, change)
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            obj.user_profile = user_profile
+            obj.company = user_profile.company
+            super().save_model(request, obj, form, change)
 
 
 @admin.register(LanguageLevel)
 class LanguageLevelAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name_uz', 'name_ru')
+    list_display = ('id', 'name_uz', 'name_ru', 'company', 'user_profile')
     list_display_links = ('id', 'name_uz', 'name_ru')
+
+    def get_exclude(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_exclude(request, obj)
+        else:
+            return ('user_profile', 'company', )
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            if user_profile:
+                return queryset.filter(user_profile=user_profile)
+            else:
+                pass
+
+    def save_model(self, request, obj, form, change):
+        if request.user.is_superuser:
+            super().save_model(request, obj, form, change)
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            obj.user_profile = user_profile
+            obj.company = user_profile.company
+            super().save_model(request, obj, form, change)
 
 
 @admin.register(Language)
 class LanguageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'name_uz', 'name_ru')
+    list_display = ('id', 'name_uz', 'name_ru', 'company', 'user_profile')
     list_display_links = ('id', 'name_uz', 'name_ru')
+
+    def get_exclude(self, request, obj=None):
+        if request.user.is_superuser:
+            return super().get_exclude(request, obj)
+        else:
+            return ('user_profile', 'company', )
+
+    def get_queryset(self, request):
+        queryset = super().get_queryset(request)
+        if request.user.is_superuser:
+            return queryset
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            if user_profile:
+                return queryset.filter(user_profile=user_profile)
+            else:
+                pass
+
+    def save_model(self, request, obj, form, change):
+        if request.user.is_superuser:
+            super().save_model(request, obj, form, change)
+        else:
+            user_profile = UserProfile.objects.get(user=request.user)
+            obj.user_profile = user_profile
+            obj.company = user_profile.company
+            super().save_model(request, obj, form, change)
 
 
 @admin.register(Question)

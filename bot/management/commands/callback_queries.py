@@ -76,6 +76,8 @@ def callback_query(update, callback, user, lan):
                 user.save()
             else:
                 candidate_language_create = CandidateLanguages.objects.create(
+                    user_profile=user.user_profile,
+                    company=user.company,
                     candidate=user.candidate,
                     vacancy=user.vacancy,
                     language=language_filter
