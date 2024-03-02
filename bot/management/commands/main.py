@@ -42,6 +42,7 @@ from apps.main.models import (
     WrittenQuestion,
     WrittenAnswer
 )
+from apps.company.api.views import send_candidate_data_to_api
 
 
 def regions(update, callback, user, lan):
@@ -395,7 +396,7 @@ def wage_expectation(update, callback, user, lan):
 
 def node(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.node:
+    if resume_filter.note:
         language_inline_fun(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -469,7 +470,7 @@ def your_resume(update, callback, user, lan):
                 "Telefon 1: " + candidate.main_phone + '\n' + 'Telefon 2: ' + candidate.extra_phone + '\n' +
                 'Email: ' + candidate.email + '\n' + 'Adres: ' + candidate.address + '\n' +
                 'Qonuniy adres: ' + candidate.legal_address + '\n' + 'Oylig maosh: ' + candidate.wage_expectation + '\n' +
-                'Tavsif: ' + candidate.node + '\n' + 'Tillar: ' + languages_text)
+                'Tavsif: ' + candidate.note + '\n' + 'Tillar: ' + languages_text)
     elif user.language == 'ru':
         reply_text = ('Ваши Данные👇👇' + '\n\n' + 'Ваше имя: ' + candidate.first_name + '\n' +
                 'Твоя фамилия: ' + candidate.last_name + '\n0' + 'Ваш шериф: ' + candidate.middle_name + '\n' +
@@ -477,7 +478,7 @@ def your_resume(update, callback, user, lan):
                 "Телефон 1: " + candidate.main_phone + '\n' + 'Телефон 2: ' + candidate.extra_phone + '\n' +
                 'Электронная почта: ' + candidate.email + '\n' + 'Адрес: ' + candidate.address + '\n' +
                 'Юридический адрес: ' + candidate.legal_address + '\n' + 'Зарплата: ' + candidate.wage_expectation + '\n' +
-                'Описание: ' + candidate.node + '\n' + 'Языки: ' + languages_text)
+                'Описание: ' + candidate.note + '\n' + 'Языки: ' + languages_text)
     else:
         reply_text = ('Your Data👇👇' + '\n\n' + 'First name: ' + candidate.first_name + '\n' +
                 'Last name: ' + candidate.last_name + '\n0' + 'Middle name: ' + candidate.middle_name + '\n' +
@@ -485,7 +486,7 @@ def your_resume(update, callback, user, lan):
                 "Phone 1: " + candidate.main_phone + '\n' + 'Phone 2: ' + candidate.extra_phone + '\n' +
                 'Email: ' + candidate.email + '\n' + 'Adress: ' + candidate.address + '\n' +
                 'Legal address: ' + candidate.legal_address + '\n' + 'Salary: ' + candidate.wage_expectation + '\n' +
-                'Node: ' + candidate.node + '\n' + 'Lanuages: ' + languages_text)
+                'Node: ' + candidate.note + '\n' + 'Lanuages: ' + languages_text)
     reply_markup = resume_footer(lan)
     image = '{}'.format(candidate.image)
     if candidate.image:
@@ -498,6 +499,8 @@ def your_resume(update, callback, user, lan):
 
 
 def finish_resume(update, callback, user, lan):
+    candidate = user.candidate
+    send_candidate_data_to_api(candidate)
     if user.language == 'uz':
         reply_text = ("Tabriklaymiz sizning malumotlaringiz qabul qilindi.✅✅ \n\n Yozma savollar hamda shu vakansiya"
                       " bo'yicha qisqa test bajarishingiz kerak bo'ladi👇👇")
@@ -507,7 +510,6 @@ def finish_resume(update, callback, user, lan):
     else:
         reply_text = ("Congratulations your information received.✅✅ \n\n You will need to do written questions as "
                       "well as a short test on the same vacancy👇👇")
-    candidate = user.candidate
     candidate_languages = CandidateLanguages.objects.filter(candidate=candidate)
     text = ''
     for candidate_language in candidate_languages:
@@ -684,7 +686,7 @@ def answer_fun(update, callback, user, lan):
             address=candidate.address,
             legal_address=candidate.legal_address,
             wage_expectation=candidate.wage_expectation,
-            node=candidate.node,
+            note=candidate.note,
             language_data=candidate.language_data,
             education_data=candidate.education_data
         )
@@ -709,7 +711,7 @@ def answer_fun(update, callback, user, lan):
             address=candidate.address,
             legal_address=candidate.legal_address,
             wage_expectation=candidate.wage_expectation,
-            node=candidate.node,
+            note=candidate.note,
             language_data=candidate.language_data,
             education_data=candidate.education_data
         )

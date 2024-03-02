@@ -308,7 +308,7 @@ def handler(update, callback, user, lan):
             vacancies(update, callback, user, lan)
         else:
             candidate = user.candidate
-            candidate.node = text
+            candidate.note = text
             candidate.save()
             language_inline_fun(update, callback, user, lan)
     elif user.type == 'language_inline_fun':
@@ -407,6 +407,7 @@ def handler(update, callback, user, lan):
                         write_question=write_question,
                         title_uz='Question: ' + write_question.title_uz + '\n' + 'Answer: ' + text + '\n\n'
                     )
+                    write_answer_create.save()
             elif user.language == 'ru':
                 write_answer_filter = WrittenAnswer.objects.filter(vacancy=vacancy, candidate=user.candidate)
                 if write_answer_filter:

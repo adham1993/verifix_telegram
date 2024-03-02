@@ -27,6 +27,8 @@ urlpatterns = [
     path('set-webhook/<str:token>/', set_webhook),
     path('delete-webhook/<str:token>/', delete_webhook),
 
+    path('api/v1/company/', include('apps.company.urls'))
+
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

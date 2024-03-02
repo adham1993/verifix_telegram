@@ -21,10 +21,10 @@ from apps.company.models import (
 
 
 class UserProfile(models.Model):
-    profile_name = models.CharField(max_length=128)
-    bot_username = models.CharField(max_length=128)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
+    profile_name = models.CharField(max_length=128)
+    bot_username = models.CharField(max_length=128)
 
     def __str__(self):
         return self.profile_name or self.user.username
