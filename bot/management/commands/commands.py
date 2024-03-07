@@ -31,7 +31,7 @@ def start(update, callback, user, lan):
         image = '{}'.format(start_message.image)
         reply_markup = home_menu(lan)
         if start_message.image:
-            update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                       parse_mode='HTML')
+            update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
+            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         else:
             update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')

@@ -64,8 +64,8 @@ def regions(update, callback, user, lan):
     image = '{}'.format(filial_message.image)
     reply_markup = regions_button(callback, user, lan)
     if filial_message.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                   parse_mode='HTML')
+        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
 
@@ -92,8 +92,8 @@ def filials(update, callback, user, lan):
     image = '{}'.format(filial_message.image)
     reply_markup = filials_button(callback, user, lan)
     if filial_message.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                   parse_mode='HTML')
+        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
 
@@ -120,8 +120,8 @@ def vacancies(update, callback, user, lan):
     image = '{}'.format(vacancy_message.image)
     reply_markup = vacancies_button(callback, user, lan)
     if vacancy_message.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                   parse_mode='HTML')
+        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
 
@@ -490,8 +490,9 @@ def your_resume(update, callback, user, lan):
     reply_markup = resume_footer(lan)
     image = '{}'.format(candidate.image)
     if candidate.image:
-        update.callback_query.message.reply_photo(photo=open(image, 'rb'), caption=reply_text[:4096], reply_markup=reply_markup,
-                                   parse_mode='HTML')
+        update.callback_query.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=reply_markup,
+                                                  parse_mode='HTML')
+        update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup[:4096], parse_mode='HTML')
     else:
         update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup[:4096], parse_mode='HTML')
     user.type = 'your_resume'
@@ -550,8 +551,8 @@ def main_office_vacancies(update, callback, user, lan):
     image = '{}'.format(vacancy_message.image)
     reply_markup = main_office_vacancies_button(callback, user, lan)
     if vacancy_message.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                   parse_mode='HTML')
+        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
 
@@ -572,8 +573,8 @@ def contact(update, callback, user, lan):
     reply_markup = contact_button(lan)
     image = '{}'.format(contact_message.image)
     if contact_message.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                   parse_mode='HTML')
+        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'home_menu'
@@ -594,14 +595,15 @@ def about_company(update, callback, user, lan):
     reply_markup = home_menu(lan)
     if content.image and content.video:
         update.message.reply_video(video=open(video, 'rb'))
-        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                   parse_mode='HTML')
+        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     elif content.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                   parse_mode='HTML')
+        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     elif content.video:
-        update.message.reply_video(video=open(video, 'rb'), caption=reply_text, reply_markup=reply_markup,
+        update.message.reply_video(video=open(video, 'rb'), caption='', reply_markup=reply_markup,
                                    parse_mode='HTML')
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'home_menu'
