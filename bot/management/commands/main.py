@@ -464,37 +464,68 @@ def your_resume(update, callback, user, lan):
             candidate_language_level1 = candidate_language.language_level.name_en
         languages_text += '\n' + candidate_language1 + ' ' + candidate_language_level1
     if user.language == 'uz':
-        reply_text = ('Sizning Malumotlaringiz👇👇' + '\n\n' + 'Ismingiz: ' + candidate.first_name + '\n' +
-                'Familyangiz: ' + candidate.last_name + '\n0' + 'Sharifingiz: ' + candidate.middle_name + '\n' +
-                'Jinsingiz: ' + candidate.gender + '\n' + "Tug'ilgan kuningiz: " + str(candidate.birthday) + '\n' +
-                "Telefon 1: " + candidate.main_phone + '\n' + 'Telefon 2: ' + candidate.extra_phone + '\n' +
-                'Email: ' + candidate.email + '\n' + 'Adres: ' + candidate.address + '\n' +
-                'Qonuniy adres: ' + candidate.legal_address + '\n' + 'Oylig maosh: ' + candidate.wage_expectation + '\n' +
-                'Tavsif: ' + candidate.note + '\n' + 'Tillar: ' + languages_text)
+        reply_text = ('Sizning Malumotlaringiz👇👇' + '\n\n' +
+                      'Ismingiz: ' + (candidate.first_name or 'N/A') + '\n' +
+                      'Familyangiz: ' + (candidate.last_name or 'N/A') + '\n0' +
+                      'Sharifingiz: ' + (candidate.middle_name or 'N/A') + '\n' +
+                      'Jinsingiz: ' + (candidate.gender or 'N/A') + '\n' +
+                      "Tug'ilgan kuningiz: " + (str(candidate.birthday) or 'N/A') + '\n' +
+                      "Telefon 1: " + (candidate.main_phone or 'N/A') + '\n' +
+                      'Telefon 2: ' + (candidate.extra_phone or 'N/A') + '\n' +
+                      'Email: ' + (candidate.email or 'N/A') + '\n' +
+                      'Adres: ' + (candidate.address or 'N/A') + '\n' +
+                      'Qonuniy adres: ' + (candidate.legal_address or 'N/A') + '\n' +
+                      'Oylig maosh: ' + (candidate.wage_expectation or 'N/A') + '\n' +
+                      'Tavsif: ' + (candidate.note or 'N/A') + '\n' +
+                      'Tillar: ' + languages_text)
     elif user.language == 'ru':
-        reply_text = ('Ваши Данные👇👇' + '\n\n' + 'Ваше имя: ' + candidate.first_name + '\n' +
-                'Твоя фамилия: ' + candidate.last_name + '\n0' + 'Ваш шериф: ' + candidate.middle_name + '\n' +
-                'Ваш пол: ' + candidate.gender + '\n' + "Твой день рождения: " + str(candidate.birthday) + '\n' +
-                "Телефон 1: " + candidate.main_phone + '\n' + 'Телефон 2: ' + candidate.extra_phone + '\n' +
-                'Электронная почта: ' + candidate.email + '\n' + 'Адрес: ' + candidate.address + '\n' +
-                'Юридический адрес: ' + candidate.legal_address + '\n' + 'Зарплата: ' + candidate.wage_expectation + '\n' +
-                'Описание: ' + candidate.note + '\n' + 'Языки: ' + languages_text)
+        reply_text = ('Ваши Данные👇👇' + '\n\n' +
+                      'Ваше имя: ' + (candidate.first_name or 'N/A') + '\n' +
+                      'Твоя фамилия: ' + (candidate.last_name or 'N/A') + '\n0' +
+                      'Ваш шериф: ' + (candidate.middle_name or 'N/A') + '\n' +
+                      'Ваш пол: ' + (candidate.gender or 'N/A') + '\n' +
+                      "Твой день рождения: " + (str(candidate.birthday) or 'N/A') + '\n' +
+                      "Телефон 1: " + (candidate.main_phone or 'N/A') + '\n' +
+                      'Телефон 2: ' + (candidate.extra_phone or 'N/A') + '\n' +
+                      'Электронная почта: ' + (candidate.email or 'N/A') + '\n' +
+                      'Адрес: ' + (candidate.address or 'N/A') + '\n' +
+                      'Юридический адрес: ' + (candidate.legal_address or 'N/A') + '\n' +
+                      'Зарплата: ' + (candidate.wage_expectation or 'N/A') + '\n' +
+                      'Описание: ' + (candidate.note or 'N/A') + '\n' +
+                      'Языки: ' + languages_text)
     else:
-        reply_text = ('Your Data👇👇' + '\n\n' + 'First name: ' + candidate.first_name + '\n' +
-                'Last name: ' + candidate.last_name + '\n0' + 'Middle name: ' + candidate.middle_name + '\n' +
-                'Gender: ' + candidate.gender + '\n' + "Your birthday: " + str(candidate.birthday) + '\n' +
-                "Phone 1: " + candidate.main_phone + '\n' + 'Phone 2: ' + candidate.extra_phone + '\n' +
-                'Email: ' + candidate.email + '\n' + 'Adress: ' + candidate.address + '\n' +
-                'Legal address: ' + candidate.legal_address + '\n' + 'Salary: ' + candidate.wage_expectation + '\n' +
-                'Node: ' + candidate.note + '\n' + 'Lanuages: ' + languages_text)
+        reply_text = ('Your Data👇👇' + '\n\n' +
+                      'First name: ' + (candidate.first_name or 'N/A') + '\n' +
+                      'Last name: ' + (candidate.last_name or 'N/A') + '\n0' +
+                      'Middle name: ' + (candidate.middle_name or 'N/A') + '\n' +
+                      'Gender: ' + (candidate.gender or 'N/A') + '\n' +
+                      "Your birthday: " + (str(candidate.birthday) or 'N/A') + '\n' +
+                      "Phone 1: " + (candidate.main_phone or 'N/A') + '\n' +
+                      'Phone 2: ' + (candidate.extra_phone or 'N/A') + '\n' +
+                      'Email: ' + (candidate.email or 'N/A') + '\n' +
+                      'Adress: ' + (candidate.address or 'N/A') + '\n' +
+                      'Legal address: ' + (candidate.legal_address or 'N/A') + '\n' +
+                      'Salary: ' + (candidate.wage_expectation or 'N/A') + '\n' +
+                      'Node: ' + (candidate.note or 'N/A') + '\n' +
+                      'Languages: ' + languages_text)
+
     reply_markup = resume_footer(lan)
     image = '{}'.format(candidate.image)
-    if candidate.image:
-        update.callback_query.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=reply_markup,
-                                                  parse_mode='HTML')
-        update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup[:4096], parse_mode='HTML')
+    if update.callback_query:
+        if candidate.image:
+            update.callback_query.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=reply_markup,
+                                                      parse_mode='HTML')
+            update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        else:
+            update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
-        update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup[:4096], parse_mode='HTML')
+        print('aaa')
+        if candidate.image:
+            update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=reply_markup,
+                                                      parse_mode='HTML')
+            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        else:
+            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'your_resume'
     user.save()
 
@@ -566,7 +597,7 @@ def contact(update, callback, user, lan):
     contact_message = ContactMessage.objects.filter(user_profile=user_profile_filter).first()
     if user.language == 'uz':
         reply_text = contact_message.title_uz + '\n\n'
-    elif user.language == 'uz':
+    elif user.language == 'ru':
         reply_text = contact_message.title_ru + '\n\n'
     else:
         reply_text = contact_message.title_en + '\n\n'
@@ -655,9 +686,9 @@ def test_start(update, callback, user, lan):
             reply_text = 'Тестовые вопросы не включены'
         else:
             reply_text = 'Test questions not included'
-        reply_markup = footer_button_finish(lan)
+        reply_markup = footer_back_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-        user.type = 'home_menu'
+        user.type = 'test_start'
         user.true_count = 0
         user.save()
 

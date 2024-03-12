@@ -87,7 +87,10 @@ def handler(update, callback, user, lan):
     elif text == lan['write_question_start']:
         write_question_start(update, callback, user, lan)
     elif text == lan['finish_back']:
-        finish_resume(update, callback, user, lan)
+        if user.type == 'test_start':
+            finish_resume(update, callback, user, lan)
+        else:
+            finish_resume(update, callback, user, lan)
     elif text == lan['restart_resume']:
         resume_start(update, callback, user, lan)
     elif user.type == 'region':
