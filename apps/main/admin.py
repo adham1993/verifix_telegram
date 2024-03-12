@@ -86,7 +86,7 @@ class QuestionListFilter(admin.SimpleListFilter):
 
     def lookups(self, request, model_admin):
         if request.user.is_superuser:
-            questions = Vacancy.objects.all()
+            questions = Question.objects.all()
         else:
             user_profile = UserProfile.objects.get(user=request.user)
             questions = Question.objects.filter(user_profile=user_profile)

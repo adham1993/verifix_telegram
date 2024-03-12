@@ -126,8 +126,6 @@ class CandidateLanguages(models.Model):
 class ResumeFilter(models.Model):
     user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE,
                                      related_name='user_profile_resume_filter')
-    bot_user = models.ForeignKey('bot.UserBot', on_delete=models.CASCADE, null=True, blank=True,
-                                 related_name='bot_user_resume_filter')
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     first_name = models.BooleanField(default=False)
     last_name = models.BooleanField(default=False)

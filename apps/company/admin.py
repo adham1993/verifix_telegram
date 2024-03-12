@@ -301,7 +301,7 @@ class ResumeFilterAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             return super().get_exclude(request, obj)
         else:
-            return ('company', 'user_profile', 'bot_user')
+            return ('company', 'user_profile')
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -328,7 +328,5 @@ class ResumeFilterAdmin(admin.ModelAdmin):
                 if user_bot_filter:
                     user_bot_filter.resume_filter = obj
                     user_bot_filter.save()
-                    obj.bot_user = user_bot_filter
-                    obj.save()
                 else:
                     pass

@@ -30,6 +30,7 @@ from .keyboards import (
 from apps.company.models import (
     CandidateLanguages,
     Candidate,
+    ResumeFilter
 )
 from apps.main.models import (
     Education,
@@ -191,8 +192,16 @@ def check_candidate(update, callback, user, lan):
 
 
 def resume_start(update, callback, user, lan):
+    bot_username = callback.bot.username
+    user_profile = UserProfile.objects.filter(bot_username=bot_username).first()
     resume_filter = user.resume_filter
-    if resume_filter.first_name:
+    if not resume_filter:
+        resume_filter = ResumeFilter.objects.filter(user_profile=user_profile, company=user.company).first()
+        user.resume_filter = resume_filter
+        user.save()
+    else:
+        pass
+    if not resume_filter.first_name:
         last_name(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -209,7 +218,7 @@ def resume_start(update, callback, user, lan):
 
 def last_name(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.last_name:
+    if not resume_filter.last_name:
         middle_name(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -226,7 +235,7 @@ def last_name(update, callback, user, lan):
 
 def middle_name(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.middle_name:
+    if not resume_filter.middle_name:
         gender(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -243,7 +252,7 @@ def middle_name(update, callback, user, lan):
 
 def gender(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.gender:
+    if not resume_filter.gender:
         birthday(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -260,7 +269,7 @@ def gender(update, callback, user, lan):
 
 def birthday(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.birthday:
+    if not resume_filter.birthday:
         candidate_image(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -277,7 +286,7 @@ def birthday(update, callback, user, lan):
 
 def candidate_image(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.image:
+    if not resume_filter.image:
         main_phone(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -294,7 +303,7 @@ def candidate_image(update, callback, user, lan):
 
 def main_phone(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.main_phone:
+    if not resume_filter.main_phone:
         extra_phone(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -311,7 +320,7 @@ def main_phone(update, callback, user, lan):
 
 def extra_phone(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.extra_phone:
+    if not resume_filter.extra_phone:
         email(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -328,7 +337,7 @@ def extra_phone(update, callback, user, lan):
 
 def email(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.email:
+    if not resume_filter.email:
         address(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -345,7 +354,7 @@ def email(update, callback, user, lan):
 
 def address(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.address:
+    if not resume_filter.address:
         legal_address(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -362,7 +371,7 @@ def address(update, callback, user, lan):
 
 def legal_address(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.legal_address:
+    if not resume_filter.legal_address:
         wage_expectation(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -379,7 +388,7 @@ def legal_address(update, callback, user, lan):
 
 def wage_expectation(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.wage_expectation:
+    if not resume_filter.wage_expectation:
         node(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -396,7 +405,7 @@ def wage_expectation(update, callback, user, lan):
 
 def node(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.note:
+    if not resume_filter.note:
         language_inline_fun(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -413,7 +422,7 @@ def node(update, callback, user, lan):
 
 def language_inline_fun(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.language:
+    if not resume_filter.language:
         education_inline_fun(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -430,7 +439,7 @@ def language_inline_fun(update, callback, user, lan):
 
 def education_inline_fun(update, callback, user, lan):
     resume_filter = user.resume_filter
-    if resume_filter.education:
+    if not resume_filter.education:
         your_resume(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -440,10 +449,16 @@ def education_inline_fun(update, callback, user, lan):
         else:
             reply_text = "Set your level of knowledge"
         reply_markup = education_inline(callback, user, lan)
-        if resume_filter.language:
-            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        if update.callback_query:
+            if resume_filter.language:
+                update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+            else:
+                update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         else:
-            update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+            if resume_filter.language:
+                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+            else:
+                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'education_inline_fun'
         user.save()
 
