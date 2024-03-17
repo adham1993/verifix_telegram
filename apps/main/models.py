@@ -69,6 +69,7 @@ class Contact(models.Model):
     facebook = models.URLField(max_length=300, null=True, blank=True)
     telegram = models.URLField(max_length=300, null=True, blank=True)
     linkedin = models.URLField(max_length=300, null=True, blank=True)
+    youtube = models.URLField(max_length=300, null=True, blank=True)
     phone_number = models.CharField(max_length=300, null=True, blank=True)
 
 

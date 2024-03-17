@@ -616,10 +616,10 @@ def contact(update, callback, user, lan):
         reply_text = contact_message.title_ru + '\n\n'
     else:
         reply_text = contact_message.title_en + '\n\n'
-    reply_markup = contact_button(lan)
+    reply_markup = contact_button(callback, lan)
     image = '{}'.format(contact_message.image)
     if contact_message.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
+        update.message.reply_photo(photo=open(image, 'rb'), caption='', parse_mode='HTML')
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
@@ -628,8 +628,9 @@ def contact(update, callback, user, lan):
 
 
 def about_company(update, callback, user, lan):
-    content = AboutCompany.objects.all()
-    content = content[0]
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    content = AboutCompany.objects.filter(user_profile=user_profile_filter).first()
     if user.language == 'uz':
         reply_text = content.title_uz + '\n\n' + str(content.link)
     elif user.language == 'ru':

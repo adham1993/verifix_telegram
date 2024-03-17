@@ -39,6 +39,7 @@ words = {
     'facebook': "Facebook",
     'telegram': "Telegram",
     'linkedin': "Linkedin",
+    'youtube': 'Youtube',
     'phone_number': "Telefon raqam",
     'email': "Email",
 

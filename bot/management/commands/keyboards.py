@@ -377,17 +377,35 @@ def main_office_vacancies_button(callback, user, lan):
     return reply_markup
 
 
-def contact_button(lan):
-    contact = Contact.objects.all()
-    contact = contact[0]
-    keyboard = [
-        [InlineKeyboardButton(lan['instagram'], url=contact.instagram),
-         InlineKeyboardButton(lan['facebook'], url=contact.facebook)],
-        [InlineKeyboardButton(lan['telegram'], url=contact.telegram),
-         InlineKeyboardButton(lan['linkedin'], url=contact.linkedin)],
-        [InlineKeyboardButton(str(contact.phone_number), callback_data=str(contact.phone_number))],
-    ]
-
+def contact_button(callback, lan):
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    contact = Contact.objects.filter(user_profile=user_profile_filter).first()
+    keyboard = []
+    a = []
+    b = []
+    c = []
+    d = []
+    if contact.instagram:
+        a.append(InlineKeyboardButton(lan['instagram'], url=contact.instagram))
+    if contact.facebook:
+        a.append(InlineKeyboardButton(lan['facebook'], url=contact.facebook))
+    if contact.telegram:
+        b.append(InlineKeyboardButton(lan['telegram'], url=contact.telegram))
+    if contact.linkedin:
+        b.append(InlineKeyboardButton(lan['linkedin'], url=contact.linkedin))
+    if contact.youtube:
+        c.append(InlineKeyboardButton(lan['youtube'], url=contact.youtube))
+    if contact.phone_number:
+        d.append(InlineKeyboardButton(str(contact.phone_number), callback_data=str(contact.phone_number)))
+    if a:
+        keyboard.append(a)
+    if b:
+        keyboard.append(b)
+    if c:
+        keyboard.append(c)
+    if d:
+        keyboard.append(d)
     reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
     return reply_markup
 

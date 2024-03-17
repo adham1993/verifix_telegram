@@ -25,8 +25,13 @@ class Region(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, blank=True, null=True, related_name='children')
     name_uz = models.CharField(max_length=128)
-    name_ru = models.CharField(max_length=128, null=True, blank=True)
-    name_en = models.CharField(max_length=128, null=True, blank=True)
+    name_ru = models.CharField(max_length=128)
+    name_en = models.CharField(max_length=128)
+    title_uz = models.TextField()
+    title_ru = models.TextField()
+    title_en = models.TextField()
+    image = models.ImageField(upload_to='static/regions/images')
+    order = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -39,11 +44,16 @@ class Filial(models.Model):
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     name_uz = models.CharField(max_length=128)
-    name_ru = models.CharField(max_length=128, null=True, blank=True)
-    name_en = models.CharField(max_length=128, null=True, blank=True)
+    name_ru = models.CharField(max_length=128)
+    name_en = models.CharField(max_length=128)
+    title_uz = models.TextField()
+    title_ru = models.TextField()
+    title_en = models.TextField()
+    image = models.ImageField(upload_to='static/filials/images')
     opened_date = models.DateTimeField(auto_now=True)
     closed_date = models.DateTimeField(auto_now=True)
     code = models.CharField(max_length=50)
+    order = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name_uz
@@ -72,6 +82,7 @@ class Vacancy(models.Model):
     lang_uz = models.CharField(max_length=64, verbose_name='Tillar')
     lang_ru = models.CharField(max_length=64, verbose_name='Languages', null=True, blank=True)
     lang_en = models.CharField(max_length=64, verbose_name='Язикы', null=True, blank=True)
+    order = models.IntegerField(default=0)
     main_office = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
