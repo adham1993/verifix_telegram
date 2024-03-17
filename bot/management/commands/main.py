@@ -75,26 +75,28 @@ def regions(update, callback, user, lan):
 
 
 def filials(update, callback, user, lan):
-    bot_username = callback.bot.username
-    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-    filial_message = FilialMessage.objects.filter(user_profile=user_profile_filter).first()
+    # bot_username = callback.bot.username
+    # user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    # filial_message = FilialMessage.objects.filter(user_profile=user_profile_filter).first()
+    region = user.region
     if user.language == 'uz':
-        reply_text = filial_message.title_uz + '\n\n'
+        reply_text = region.title_uz + '\n\n'
     elif user.language == 'en':
-        if filial_message.title_en:
-            reply_text = filial_message.title_en + '\n\n'
+        if region.title_en:
+            reply_text = region.title_en + '\n\n'
         else:
-            reply_text = filial_message.title_uz + '\n\n'
+            reply_text = region.title_uz + '\n\n'
     else:
-        if filial_message.title_ru:
-            reply_text = filial_message.title_ru + '\n\n'
+        if region.title_ru:
+            reply_text = region.title_ru + '\n\n'
         else:
-            reply_text = filial_message.title_uz + '\n\n'
-    image = '{}'.format(filial_message.image)
+            reply_text = region.title_uz + '\n\n'
+    image = '{}'.format(region.image)
     reply_markup = filials_button(callback, user, lan)
-    if filial_message.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+    if region.image:
+        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
+                                   parse_mode='HTML')
+        # update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
 
@@ -103,26 +105,28 @@ def filials(update, callback, user, lan):
 
 
 def vacancies(update, callback, user, lan):
-    bot_username = callback.bot.username
-    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-    vacancy_message = VacancyMessage.objects.filter(user_profile=user_profile_filter).first()
+    # bot_username = callback.bot.username
+    # user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    # vacancy_message = VacancyMessage.objects.filter(user_profile=user_profile_filter).first()
+    filial = user.filial
     if user.language == 'uz':
-        reply_text = vacancy_message.title_uz + '\n\n'
+        reply_text = filial.title_uz + '\n\n'
     elif user.language == 'en':
-        if vacancy_message.title_en:
-            reply_text = vacancy_message.title_en + '\n\n'
+        if filial.title_en:
+            reply_text = filial.title_en + '\n\n'
         else:
-            reply_text = vacancy_message.title_uz + '\n\n'
+            reply_text = filial.title_uz + '\n\n'
     else:
-        if vacancy_message.title_ru:
-            reply_text = vacancy_message.title_ru + '\n\n'
+        if filial.title_ru:
+            reply_text = filial.title_ru + '\n\n'
         else:
-            reply_text = vacancy_message.title_uz + '\n\n'
-    image = '{}'.format(vacancy_message.image)
+            reply_text = filial.title_uz + '\n\n'
+    image = '{}'.format(filial.image)
     reply_markup = vacancies_button(callback, user, lan)
-    if vacancy_message.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=None, parse_mode=None)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+    if filial.image:
+        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
+                                   parse_mode='HTML')
+        # update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
 
@@ -131,27 +135,46 @@ def vacancies(update, callback, user, lan):
 
 
 def vacancy_detail(update, callback, user, lan):
+    vacancy = user.vacancy
     if user.language == 'uz':
-        vacancy = user.vacancy
-        reply_text = ('Vakasiya Malumotlari🧾:' + '\n\n' + 'Vakansiya nomi: ' + vacancy.name_uz + '\n' +
-                'Lavozim: ' + vacancy.job_name_uz + '\n' + 'Ish vaqti: ' + vacancy.schedule_uz + '\n' +
-                'Oylig maosh: ' + vacancy.wage_limit_uz + '\n' + "Bilish kerak bo'lgan tillar: " + vacancy.lang_uz +
-                '\n\n' + "Bu shartlar sizga maqul bo'lsa. O'z malumotlaringizni qoldirishingiz mumkin.✏️")
+        reply_text = vacancy.description_uz + '\n\n'
     elif user.language == 'ru':
-        vacancy = user.vacancy
-        reply_text = ('Информация О Вакансии🧾:' + '\n\n' + 'Название вакансии: ' + vacancy.name_uz + '\n' +
-                'Позиция: ' + vacancy.job_name_uz + '\n0' + 'Рабочее время: ' + vacancy.schedule_uz + '\n' +
-                'Ежемесячная зарплата: ' + vacancy.wage_limit_uz + '\n' + "Языки, которые нужно знать: " + vacancy.lang_uz +
-                '\n\n' + "Это условия, если у вас есть маки. Вы можете оставить свои данные.✏️")
+        if vacancy.description_ru:
+            reply_text = vacancy.description_ru + '\n\n'
+        else:
+            reply_text = vacancy.description_uz + '\n\n'
     else:
-        vacancy = user.vacancy
-        reply_text = ('Vacancy data🧾:' + '\n\n' + 'Vacancy name: ' + vacancy.name_uz + '\n' +
-                'Position: ' + vacancy.job_name_uz + '\n' + 'Work time: ' + vacancy.schedule_uz + '\n' +
-                'Salary: ' + vacancy.wage_limit_uz + '\n' + "Languages to know: " + vacancy.lang_uz +
-                '\n\n' + "If these conditions are applicable to you. You can leave your data.✏️")
+        if vacancy.description_en:
+            reply_text = vacancy.description_en + '\n\n'
+        else:
+            reply_text = vacancy.description_uz + '\n\n'
+    # if user.language == 'uz':
+    #     vacancy = user.vacancy
+    #     reply_text = ('Vakasiya Malumotlari🧾:' + '\n\n' + 'Vakansiya nomi: ' + vacancy.name_uz + '\n' +
+    #             'Lavozim: ' + vacancy.job_name_uz + '\n' + 'Ish vaqti: ' + vacancy.schedule_uz + '\n' +
+    #             'Oylig maosh: ' + vacancy.wage_limit_uz + '\n' + "Bilish kerak bo'lgan tillar: " + vacancy.lang_uz +
+    #             '\n\n' + "Bu shartlar sizga maqul bo'lsa. O'z malumotlaringizni qoldirishingiz mumkin.✏️")
+    # elif user.language == 'ru':
+    #     vacancy = user.vacancy
+    #     reply_text = ('Информация О Вакансии🧾:' + '\n\n' + 'Название вакансии: ' + vacancy.name_uz + '\n' +
+    #             'Позиция: ' + vacancy.job_name_uz + '\n0' + 'Рабочее время: ' + vacancy.schedule_uz + '\n' +
+    #             'Ежемесячная зарплата: ' + vacancy.wage_limit_uz + '\n' + "Языки, которые нужно знать: " + vacancy.lang_uz +
+    #             '\n\n' + "Это условия, если у вас есть маки. Вы можете оставить свои данные.✏️")
+    # else:
+    #     vacancy = user.vacancy
+    #     reply_text = ('Vacancy data🧾:' + '\n\n' + 'Vacancy name: ' + vacancy.name_uz + '\n' +
+    #             'Position: ' + vacancy.job_name_uz + '\n' + 'Work time: ' + vacancy.schedule_uz + '\n' +
+    #             'Salary: ' + vacancy.wage_limit_uz + '\n' + "Languages to know: " + vacancy.lang_uz +
+    #             '\n\n' + "If these conditions are applicable to you. You can leave your data.✏️")
+    image = '{}'.format(vacancy.image)
     reply_markup = vacancy_detail_button(lan)
-    update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+    if vacancy.image:
+        update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=reply_markup,
+                                   parse_mode='HTML')
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
 
+    else:
+        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     if user.vacancy.main_office:
         user.type = 'vacancy_detail_detail'
         user.save()

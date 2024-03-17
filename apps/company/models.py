@@ -70,6 +70,7 @@ class Vacancy(models.Model):
     description_uz = models.TextField()
     description_ru = models.TextField(null=True, blank=True)
     description_en = models.TextField(null=True, blank=True)
+    image = models.ImageField(upload_to='static/vacancies/images', null=True, blank=True)
     job_name_uz = models.CharField(max_length=128)
     job_name_ru = models.CharField(max_length=128, null=True, blank=True)
     job_name_en = models.CharField(max_length=128, null=True, blank=True)
@@ -88,6 +89,10 @@ class Vacancy(models.Model):
 
     def __str__(self):
         return self.name_uz or self.name_en or self.name_ru
+
+    class Meta:
+        verbose_name = 'vacancys'
+        verbose_name_plural = 'Vacancies'
 
 
 class Candidate(models.Model):

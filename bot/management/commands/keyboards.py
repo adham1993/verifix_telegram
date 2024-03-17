@@ -38,7 +38,7 @@ def home_menu(lan):
 def regions_button(callback, user, lan):
     bot_username = callback.bot.username
     user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-    regions = Region.objects.filter(user_profile=user_profile_filter, parent__isnull=True)
+    regions = Region.objects.filter(user_profile=user_profile_filter, parent__isnull=True).order_by('order')
     keyboard = []
     c = 0
     b = []
@@ -97,7 +97,7 @@ def filials_button(callback, user, lan):
     bot_username = callback.bot.username
     user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
     region = user.region
-    filials = Filial.objects.filter(user_profile=user_profile_filter, region=region)
+    filials = Filial.objects.filter(user_profile=user_profile_filter, region=region).order_by('order')
     keyboard = []
     c = 0
     b = []
@@ -156,7 +156,7 @@ def vacancies_button(callback, user, lan):
     bot_username = callback.bot.username
     user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
     filial = user.filial
-    vacancies = Vacancy.objects.filter(user_profile=user_profile_filter, filial=filial)
+    vacancies = Vacancy.objects.filter(user_profile=user_profile_filter, filial=filial).order_by('order')
     keyboard = []
     c = 0
     b = []
