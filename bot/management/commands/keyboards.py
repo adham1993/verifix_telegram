@@ -12,7 +12,6 @@ from apps.main.models import (
 )
 from apps.main.models import (
     Contact,
-    Question,
     Answer
 )
 
@@ -313,12 +312,11 @@ def resume_footer(lan):
     return reply_markup
 
 
-def finish_resume_button(lan):
+def test_start_button(lan):
     keyboard = [
-        [KeyboardButton(lan['write_question']), KeyboardButton(lan['test_start'])],
-        [KeyboardButton(lan['home_menu'])],
+        [KeyboardButton(lan['test_start'])],
     ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
     return reply_markup
 
 
@@ -443,22 +441,6 @@ def footer_button_finish(lan):
         [KeyboardButton(lan['home_menu'])]
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
-    return reply_markup
-
-
-def write_question_button(lan):
-    keyboard = [
-        [KeyboardButton(lan['write_question_start'])]
-    ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True, one_time_keyboard=True)
-    return reply_markup
-
-
-def footer_back_button(lan):
-    keyboard = [
-        [KeyboardButton(lan['finish_back'])]
-    ]
-    reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
     return reply_markup
 
 

@@ -128,9 +128,9 @@ class Candidate(models.Model):
             self.birthday = datetime.strptime(self.birthday, '%d-%m-%Y')
 
         super().save(*args, **kwargs)
-    #
-    # def __str__(self):
-    #     return self.full_name or None
+
+    def __str__(self):
+        return self.full_name or self.main_phone
 
 
 class CandidateLanguages(models.Model):
@@ -145,7 +145,7 @@ class CandidateLanguages(models.Model):
     add_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.candidate.first_name or self.candidate.last_name or self.candidate.middle_name
+        return self.candidate.full_name or self.candidate.main_phone
 
 
 class ResumeFilter(models.Model):

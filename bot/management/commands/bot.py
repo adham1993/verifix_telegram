@@ -38,7 +38,6 @@ def webhook(request, token):
 
 
 def set_webhook(request, token):
-    print(token)
     bot_token = BotToken.objects.get(token=token)
     bot = Bot(token=bot_token.token)
     updater = Updater(bot=bot, use_context=True)
@@ -106,34 +105,3 @@ class Command(BaseCommand):
         updater.dispatcher.add_handler(MessageHandler(Filters.photo, image))
 
         return updater
-#
-# class Command(BaseCommand):
-#     help = 'Telegram bot'
-#
-#     def handle(self, *args, **options):
-#         bots = BotToken.objects.all()
-#         for bot in bots:
-#             request = Request(
-#                 connect_timeout=0.5,
-#                 read_timeout=1.0,
-#             )
-#             bot = Bot(
-#                 # request=request,
-#                 token=bot.token,
-#                 # base_url=settings.PROXY_URL,
-#             )
-#             updater = Updater(
-#                 bot=bot,
-#                 use_context=True,
-#             )
-#             updater.dispatcher.add_handler(CommandHandler('start', start))
-#             updater.dispatcher.add_handler(MessageHandler(FilterLanguage(), set_language))
-#             # updater.dispatcher.add_handler(MessageHandler(Filters.document, send_document))
-#             updater.dispatcher.add_handler(MessageHandler(Filters.text, handler))
-#             updater.dispatcher.add_handler(CallbackQueryHandler(callback_query))
-#
-#             # updater.dispatcher.add_handler(MessageHandler(Filters.contact, text_contact))
-#             # updater.dispatcher.add_handler(MessageHandler(Filters.photo, image))
-#
-#             updater.start_polling()
-#             updater.idle()

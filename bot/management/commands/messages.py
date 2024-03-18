@@ -13,9 +13,6 @@ from .main import (
     vacancies,
     vacancy_detail,
     resume_start,
-    last_name,
-    middle_name,
-    birthday,
     candidate_image,
     main_phone,
     email,
@@ -31,8 +28,6 @@ from .main import (
     about_company,
     check_candidate,
     test_start,
-    answer_fun,
-    write_question_fun,
     write_question_start
 )
 from apps.company.models import (
@@ -55,11 +50,8 @@ def is_valid_date_format(date_text):
 
 @autorization
 def handler(update, callback, user, lan):
-    print('user.type=', user.type)
     chat_id = update.message.chat_id
     text = update.message.text
-    print(text == lan['test_start'])
-    print(text)
     bot_username = callback.bot.username
     if text == lan['home_menu']:
         start(update, callback)
@@ -81,8 +73,6 @@ def handler(update, callback, user, lan):
         about_company(update, callback, user, lan)
     elif text == lan['test_start']:
         test_start(update, callback, user, lan)
-    elif text == lan['write_question']:
-        write_question_fun(update, callback, user, lan)
     elif text == lan['write_question_start']:
         write_question_start(update, callback, user, lan)
     elif text == lan['finish_back']:

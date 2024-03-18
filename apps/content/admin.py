@@ -180,26 +180,26 @@ class ContactMessageAdmin(admin.ModelAdmin):
             super().save_model(request, obj, form, change)
 
 
-@admin.register(WriteQuestionMessage)
-class WriteQuestionMessageAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_profile', 'title_uz', 'title_ru')
-    exclude = ('user_profile',)
-
-    def get_queryset(self, request):
-        queryset = super().get_queryset(request)
-        if request.user.is_superuser:
-            return queryset
-        else:
-            user_profile = UserProfile.objects.get(user=request.user)
-            if user_profile:
-                return queryset.filter(user_profile=user_profile)
-            else:
-                pass
-
-    def save_model(self, request, obj, form, change):
-        if request.user.is_superuser:
-            super().save_model(request, obj, form, change)
-        else:
-            user_profile = UserProfile.objects.get(user=request.user)
-            obj.user_profile = user_profile
-            super().save_model(request, obj, form, change)
+# @admin.register(WriteQuestionMessage)
+# class WriteQuestionMessageAdmin(admin.ModelAdmin):
+#     list_display = ('id', 'user_profile', 'title_uz', 'title_ru')
+#     exclude = ('user_profile',)
+#
+#     def get_queryset(self, request):
+#         queryset = super().get_queryset(request)
+#         if request.user.is_superuser:
+#             return queryset
+#         else:
+#             user_profile = UserProfile.objects.get(user=request.user)
+#             if user_profile:
+#                 return queryset.filter(user_profile=user_profile)
+#             else:
+#                 pass
+#
+#     def save_model(self, request, obj, form, change):
+#         if request.user.is_superuser:
+#             super().save_model(request, obj, form, change)
+#         else:
+#             user_profile = UserProfile.objects.get(user=request.user)
+#             obj.user_profile = user_profile
+#             super().save_model(request, obj, form, change)

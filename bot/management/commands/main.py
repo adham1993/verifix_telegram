@@ -1,11 +1,8 @@
 from .log import autorization
 from apps.content.models import (
-    FilialMessage,
     RegionMessage,
-    VacancyMessage,
     MainOfficeVacancyMessage,
     ContactMessage,
-    WriteQuestionMessage
 )
 from bot.models import UserProfile
 from .keyboards import (
@@ -18,17 +15,15 @@ from .keyboards import (
     language_inline,
     education_inline,
     resume_footer,
-    finish_resume_button,
     main_office_vacancies_button,
     contact_button,
     home_menu,
     check_candidate_button,
     answer_button,
     footer_button_finish,
-    write_question_button,
-    footer_back_button,
     send_contact_main_phone,
-    send_contact_extr_phone
+    send_contact_extr_phone,
+    test_start_button
 )
 from apps.company.models import (
     CandidateLanguages,
@@ -241,38 +236,38 @@ def resume_start(update, callback, user, lan):
         user.save()
 
 
-def last_name(update, callback, user, lan):
-    resume_filter = user.resume_filter
-    if not resume_filter.last_name:
-        middle_name(update, callback, user, lan)
-    else:
-        if user.language == 'uz':
-            reply_text = "Familyangizni kiriting✍️"
-        elif user.language == 'ru':
-            reply_text = "Введите свою фамилию✍️"
-        else:
-            reply_text = "Enter your last name✍️"
-        reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-        user.type = 'last_name'
-        user.save()
-
-
-def middle_name(update, callback, user, lan):
-    resume_filter = user.resume_filter
-    if not resume_filter.middle_name:
-        gender(update, callback, user, lan)
-    else:
-        if user.language == 'uz':
-            reply_text = "Sharifingizni kiriting👇"
-        elif user.language == 'ru':
-            reply_text = "Введите свое второе имя👇"
-        else:
-            reply_text = "Enter your middle name👇"
-        reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-        user.type = 'middle_name'
-        user.save()
+# def last_name(update, callback, user, lan):
+#     resume_filter = user.resume_filter
+#     if not resume_filter.last_name:
+#         middle_name(update, callback, user, lan)
+#     else:
+#         if user.language == 'uz':
+#             reply_text = "Familyangizni kiriting✍️"
+#         elif user.language == 'ru':
+#             reply_text = "Введите свою фамилию✍️"
+#         else:
+#             reply_text = "Enter your last name✍️"
+#         reply_markup = footer_button(lan)
+#         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+#         user.type = 'last_name'
+#         user.save()
+#
+#
+# def middle_name(update, callback, user, lan):
+#     resume_filter = user.resume_filter
+#     if not resume_filter.middle_name:
+#         gender(update, callback, user, lan)
+#     else:
+#         if user.language == 'uz':
+#             reply_text = "Sharifingizni kiriting👇"
+#         elif user.language == 'ru':
+#             reply_text = "Введите свое второе имя👇"
+#         else:
+#             reply_text = "Enter your middle name👇"
+#         reply_markup = footer_button(lan)
+#         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+#         user.type = 'middle_name'
+#         user.save()
 
 
 def gender(update, callback, user, lan):
@@ -510,7 +505,7 @@ def language_inline_fun(update, callback, user, lan):
 def education_inline_fun(update, callback, user, lan):
     resume_filter = user.resume_filter
     if not resume_filter.education:
-        your_resume(update, callback, user, lan)
+        write_question_start(update, callback, user, lan)
     else:
         if user.language == 'uz':
             reply_text = lan['send_education']
@@ -604,7 +599,6 @@ def your_resume(update, callback, user, lan):
         else:
             update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     else:
-        print('aaa')
         if candidate.image:
             update.message.reply_photo(photo=open(image, 'rb'), caption='', reply_markup=reply_markup,
                                                       parse_mode='HTML')
@@ -639,7 +633,7 @@ def finish_resume(update, callback, user, lan):
     user.write_number = 0
     user.save()
     candidate.save()
-    reply_markup = finish_resume_button(lan)
+    reply_markup = test_start_button(lan)
     update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'finish_resume'
     user.save()
@@ -769,7 +763,7 @@ def test_start(update, callback, user, lan):
             reply_text = lan['test_not_found']
         else:
             reply_text = lan['test_not_found']
-        reply_markup = footer_back_button(lan)
+        reply_markup = footer_button_finish(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'test_start'
         user.true_count = 0
@@ -833,40 +827,37 @@ def answer_fun(update, callback, user, lan):
         )
         success_candidate_create.save()
     if user.language == 'uz':
-        reply_text = ('Sizning javoblaringiz qabul qilindi.' + '\n' + "Siz " + str(question_count) + ' testdan ' +
-                      str(user.true_count) + ' ta bajardingiz.🥳🥳')
+        reply_text = lan['data_success']
     elif user.language == 'ru':
-        reply_text = ('Ваши ответы приняты.' + '\n' + "Вы " + str(question_count) + ' из теста    ' +
-                      str(user.true_count) + ' вы сделали.🥳🥳')
+        reply_text = lan['data_success']
     else:
-        reply_text = ('Your answers were accepted.' + '\n' + "You " + str(question_count) + ' from the test ' +
-                      str(user.true_count) + ' you did.🥳🥳')
-    reply_markup = footer_back_button(lan)
+        reply_text = lan['data_success']
+    reply_markup = footer_button_finish(lan)
     update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'home_menu'
     user.true_count = 0
     user.save()
 
 
-def write_question_fun(update, callback, user, lan):
-    bot_username = callback.bot.username
-    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-    write_question_message = WriteQuestionMessage.objects.filter(user_profile=user_profile_filter).first()
-    if user.language == 'uz':
-        reply_text = write_question_message.title_uz + '\n\n'
-    elif user.language == 'uz':
-        reply_text = write_question_message.title_ru + '\n\n'
-    else:
-        reply_text = write_question_message.title_en + '\n\n'
-    reply_markup = write_question_button(lan)
-    image = '{}'.format(write_question_message.image)
-    if write_question_message.image:
-        update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
-                                   parse_mode='HTML')
-    else:
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-    user.type = 'write_question_fun'
-    user.save()
+# def write_question_fun(update, callback, user, lan):
+#     bot_username = callback.bot.username
+#     user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+#     write_question_message = WriteQuestionMessage.objects.filter(user_profile=user_profile_filter).first()
+#     if user.language == 'uz':
+#         reply_text = write_question_message.title_uz + '\n\n'
+#     elif user.language == 'uz':
+#         reply_text = write_question_message.title_ru + '\n\n'
+#     else:
+#         reply_text = write_question_message.title_en + '\n\n'
+#     reply_markup = write_question_button(lan)
+#     image = '{}'.format(write_question_message.image)
+#     if write_question_message.image:
+#         update.message.reply_photo(photo=open(image, 'rb'), caption=reply_text, reply_markup=reply_markup,
+#                                    parse_mode='HTML')
+#     else:
+#         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+#     user.type = 'write_question_fun'
+#     user.save()
 
 
 def write_question_start(update, callback, user, lan):
@@ -883,34 +874,44 @@ def write_question_start(update, callback, user, lan):
                     user.write_question = questions[user.write_number]
                     user.save()
                     reply_text = str(user.write_number + 1) + '. ' + questions[user.write_number].title_uz
-                    update.message.reply_text(text=reply_text)
+                    if update.callback_query:
+                        update.callback_query.message.reply_text(text=reply_text)
+                    else:
+                        update.message.reply_text(text=reply_text)
                     break
                 elif user.language == 'ru':
                     user.write_question = questions[user.write_number]
                     user.save()
                     reply_text = str(user.write_number + 1) + '. ' + questions[user.write_number].title_ru
-                    update.message.reply_text(text=reply_text)
+                    if update.callback_query:
+                        update.callback_query.message.reply_text(text=reply_text)
+                    else:
+                        update.message.reply_text(text=reply_text)
                     break
                 else:
                     user.write_question = questions[user.write_number]
                     user.save()
                     reply_text = str(user.write_number + 1) + '. ' + questions[user.write_number].title_en
-                    update.message.reply_text(text=reply_text)
+                    if update.callback_query:
+                        update.callback_query.message.reply_text(text=reply_text)
+                    else:
+                        update.message.reply_text(text=reply_text)
                     break
         user.type = 'write_question'
         user.save()
     else:
-        if user.language == 'uz':
-            reply_text = lan['write_question_not_found']
-        elif user.language == 'ru':
-            reply_text = lan['write_question_not_found']
-        else:
-            reply_text = lan['write_question_not_found']
-        reply_markup = footer_back_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-        user.type = 'write_question_not'
-        user.true_count = 0
-        user.save()
+        your_resume(update, callback, user, lan)
+        # if user.language == 'uz':
+        #     reply_text = lan['write_question_not_found']
+        # elif user.language == 'ru':
+        #     reply_text = lan['write_question_not_found']
+        # else:
+        #     reply_text = lan['write_question_not_found']
+        # reply_markup = test_start_button(lan)
+        # update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        # user.type = 'write_question_not'
+        # user.true_count = 0
+        # user.save()
 
 
 def write_answer(update, callback, user, lan):
@@ -920,7 +921,7 @@ def write_answer(update, callback, user, lan):
         reply_text = lan['write_answer_text']
     else:
         reply_text = lan['write_answer_text']
-    reply_markup = footer_back_button(lan)
+    reply_markup = test_start_button(lan)
     update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'write_answer'
     user.save()

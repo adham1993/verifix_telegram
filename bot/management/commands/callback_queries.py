@@ -3,11 +3,8 @@ from .log import autorization
 from .main import (
     birthday,
     education_inline_fun,
-    your_resume,
-    language_inline_fun
-)
-from .keyboards import (
-    footer_button
+    language_inline_fun,
+    write_question_start
 )
 from apps.company.models import (
     CandidateLanguages,
@@ -21,16 +18,11 @@ from apps.main.models import (
 from bot.models import (
     UserProfile
 )
-import datetime
 
 
 @autorization
 def callback_query(update, callback, user, lan):
     query = update.callback_query
-    # user.type = 'education_inline_fun'
-    # user.save()
-    print('query', query)
-    print('query data', query.data)
     if user.type == 'gender_callback':
         if query.data == 'mail':
             candidate = user.candidate
@@ -106,20 +98,6 @@ def callback_query(update, callback, user, lan):
             candidate.save()
         else:
             pass
-        your_resume(update, callback, user, lan)
+        write_question_start(update, callback, user, lan)
     else:
         pass
-
-
-# def birthday(update, callback, user, lan):
-#     print('update message', update.message)
-#     if user.language == 'ru':
-#         reply_text = "Tug'ilgan kuningizni manunadagidek kiriting \n\n Namuna: 2024-02-14"
-#     elif user.language == 'en':
-#         reply_text = "Tug'ilgan kuningizni manunadagidek kiriting \n\n Namuna: 2024-02-14 ru"
-#     else:
-#         reply_text = "Tug'ilgan kuningizni manunadagidek kiriting \n\n Namuna: 2024-02-14 en"
-#     reply_markup = footer_button(lan)
-#     update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-#     user.type = 'birthday'
-#     user.save()
