@@ -243,9 +243,13 @@ def language_inline(callback, user, lan):
     user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
     languages = Language.objects.filter(user_profile=user_profile_filter).order_by('order')
     languages_level = LanguageLevel.objects.filter(user_profile=user_profile_filter).order_by('order')
+    language = languages[user.language_filter]
     keyboard = []
-    for language in languages:
+    if language:
+        user.candidate_language = language
+        user.save()
         key = []
+        key2 = []
         if user.language == 'uz':
             language_inline_button = InlineKeyboardButton(text=language.name_uz, callback_data=str(language.id))
         elif user.language == 'ru':
@@ -263,13 +267,13 @@ def language_inline(callback, user, lan):
             else:
                 language_level_inline_button = InlineKeyboardButton(text=language_level.name_en,
                                                                     callback_data='a' + str(language_level.id))
-            key.append(language_level_inline_button)
+            key2.append(language_level_inline_button)
             user.inline_type = 'language_level'
             user.save()
         keyboard.append(key)
-        user.language_filter = language.order
-    the_end = [InlineKeyboardButton(text=lan['the_end_language'], callback_data='the_end_language')]
-    keyboard.append(the_end)
+        keyboard.append(key2)
+    else:
+        pass
     reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
     return reply_markup
 
@@ -289,8 +293,6 @@ def education_inline(callback, user, lan):
             language_inline_button = InlineKeyboardButton(text=education.name_en, callback_data=str(education.id))
         a.append(language_inline_button)
     keyboard.append(a)
-    the_end = [InlineKeyboardButton(text=lan['the_end_language'], callback_data='the_end_education')]
-    keyboard.append(the_end)
     reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
     return reply_markup
 

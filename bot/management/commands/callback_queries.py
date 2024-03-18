@@ -3,7 +3,8 @@ from .log import autorization
 from .main import (
     birthday,
     education_inline_fun,
-    your_resume
+    your_resume,
+    language_inline_fun
 )
 from .keyboards import (
     footer_button
@@ -16,6 +17,9 @@ from apps.main.models import (
     Language,
     LanguageLevel,
     Education
+)
+from bot.models import (
+    UserProfile
 )
 import datetime
 
@@ -49,6 +53,9 @@ def callback_query(update, callback, user, lan):
             candidate.save()
             birthday(update, callback, user, lan)
     elif user.type == 'language_inline_fun':
+        bot_username = callback.bot.username
+        user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+        languages = Language.objects.filter(user_profile=user_profile_filter)
         if query.data == 'the_end_language':
             education_inline_fun(update, callback, user, lan)
         elif query.data.startswith('a') and query.data[1:].isdigit():
@@ -65,7 +72,7 @@ def callback_query(update, callback, user, lan):
                 candidate_language_filter.language_level = language_level
                 candidate_language_filter.save()
         else:
-            language_filter = Language.objects.filter(id=int(query.data)).first()
+            language_filter = user.candidate_language
             candidate_language_filter = CandidateLanguages.objects.filter(
                 candidate=user.candidate,
                 vacancy=user.vacancy,
@@ -85,17 +92,21 @@ def callback_query(update, callback, user, lan):
                 candidate_language_create.save()
                 user.candidate_language = language_filter
                 user.save()
-    elif user.type == 'education_inline_fun':
-        if query.data == 'the_end_education':
-            your_resume(update, callback, user, lan)
+        user.language_filter += 1
+        user.save()
+        if user.language_filter >= len(languages):
+            education_inline_fun(update, callback, user, lan)
         else:
-            education_filter = Education.objects.filter(id=int(query.data)).first()
-            if education_filter:
-                candidate = user.candidate
-                candidate.education.add(education_filter)
-                candidate.save()
-            else:
-                pass
+            language_inline_fun(update, callback, user, lan)
+    elif user.type == 'education_inline_fun':
+        education_filter = Education.objects.filter(id=int(query.data)).first()
+        if education_filter:
+            candidate = user.candidate
+            candidate.education.add(education_filter)
+            candidate.save()
+        else:
+            pass
+        your_resume(update, callback, user, lan)
     else:
         pass
 

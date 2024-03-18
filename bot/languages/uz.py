@@ -36,7 +36,7 @@ words = {
     'send_birthday': "Tug'ilgan kuningizni manunadagidek kiriting.🔖 \n\n Namuna: 22-22-2222👈👈",
     'send_photo': "Rasmingizni yuboring.📤",
     'send_main_phone_text': "Asosiy telefon raqamingizni yuboring📱",
-    'send_extra_phone_text': "Asosiy telefon raqamingizni yuboring📱",
+    'send_extra_phone_text': "Qo'shimcha telefon raqamingizni yuboring📱",
     'send_email': "Email adresingizni yuboring📧",
     'send_address': "Hozir yashab turgan adresingizni to'liq yozib yuboring.🪧🪧",
     'send_legal_address': "Qonuniy adresingizni to'liq yozib yuboring🪧",

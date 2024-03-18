@@ -215,7 +215,7 @@ def check_candidate(update, callback, user, lan):
 
 
 def resume_start(update, callback, user, lan):
-    user.language_filter = 1
+    user.language_filter = 0
     user.save()
     bot_username = callback.bot.username
     user_profile = UserProfile.objects.filter(bot_username=bot_username).first()
@@ -459,11 +459,11 @@ def wage_expectation(update, callback, user, lan):
         node(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "send_wage_expectation"
+            reply_text = lan['send_wage_expectation']
         elif user.language == 'ru':
-            reply_text = "send_wage_expectation"
+            reply_text = lan['send_wage_expectation']
         else:
-            reply_text = "send_wage_expectation"
+            reply_text = lan['send_wage_expectation']
         reply_markup = footer_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'wage_expectation'
@@ -499,7 +499,10 @@ def language_inline_fun(update, callback, user, lan):
         else:
             reply_text = lan['send_language']
         reply_markup = language_inline(callback, user, lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        if update.callback_query:
+            update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        else:
+            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'language_inline_fun'
         user.save()
 
