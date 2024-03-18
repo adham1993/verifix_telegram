@@ -720,7 +720,7 @@ def about_company(update, callback, user, lan):
 
 def test_start(update, callback, user, lan):
     vacancy = user.vacancy
-    questions = Question.objects.filter(vacancy=vacancy)
+    questions = Question.objects.filter(vacancy=vacancy).order_by('order')
     if questions:
         if user.q_number == len(questions):
             user.q_number = 0
