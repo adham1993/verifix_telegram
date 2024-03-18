@@ -1,9 +1,11 @@
 from django.db import models
+from django import forms
 from apps.main.models import (
     Language,
     LanguageLevel,
     Education
 )
+from datetime import datetime, date
 # Create your models here.
 
 
@@ -102,6 +104,7 @@ class Candidate(models.Model):
     region = models.ForeignKey(Region, on_delete=models.CASCADE)
     filial = models.ForeignKey(Filial, on_delete=models.CASCADE)
     vacancy = models.ForeignKey(Vacancy, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=128, null=True, blank=True)
     first_name = models.CharField(max_length=128, null=True, blank=True)
     last_name = models.CharField(max_length=128, null=True, blank=True)
     middle_name = models.CharField(max_length=128, null=True, blank=True)
@@ -120,8 +123,14 @@ class Candidate(models.Model):
     education_data = models.CharField(max_length=256, null=True, blank=True)
     add_date = models.DateTimeField(auto_now_add=True)
 
-    def __str__(self):
-        return self.first_name or self.last_name or self.middle_name
+    def save(self, *args, **kwargs):
+        if isinstance(self.birthday, str):
+            self.birthday = datetime.strptime(self.birthday, '%d-%m-%Y')
+
+        super().save(*args, **kwargs)
+    #
+    # def __str__(self):
+    #     return self.full_name or None
 
 
 class CandidateLanguages(models.Model):
@@ -143,9 +152,10 @@ class ResumeFilter(models.Model):
     user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE,
                                      related_name='user_profile_resume_filter')
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
-    first_name = models.BooleanField(default=False)
-    last_name = models.BooleanField(default=False)
-    middle_name = models.BooleanField(default=False)
+    full_name = models.BooleanField(default=False)
+    # first_name = models.BooleanField(default=False)
+    # last_name = models.BooleanField(default=False)
+    # middle_name = models.BooleanField(default=False)
     gender = models.BooleanField(default=False)
     birthday = models.BooleanField(default=False)
     image = models.BooleanField(default=False)

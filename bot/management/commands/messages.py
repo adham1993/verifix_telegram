@@ -18,7 +18,6 @@ from .main import (
     birthday,
     candidate_image,
     main_phone,
-    extra_phone,
     email,
     address,
     legal_address,
@@ -50,7 +49,7 @@ from apps.main.models import (
 
 
 def is_valid_date_format(date_text):
-    date_pattern = re.compile(r'^\d{4}-\d{2}-\d{2}$')
+    date_pattern = re.compile(r'^\d{2}-\d{2}-\d{4}$')
     return bool(re.match(date_pattern, date_text))
 
 
@@ -206,15 +205,17 @@ def handler(update, callback, user, lan):
                     region=user.region,
                     filial=user.filial,
                     vacancy=user.vacancy,
-                    first_name=text
+                    full_name=text
                 )
                 candidate.save()
                 user.candidate = candidate
                 user.save()
             else:
+                candidate_filter.full_name = text
+                candidate_filter.save()
                 user.candidate = candidate_filter
                 user.save()
-            last_name(update, callback, user, lan)
+            gender(update, callback, user, lan)
     elif user.type == 'last_name':
         if text == lan['back']:
             vacancies(update, callback, user, lan)
@@ -223,7 +224,7 @@ def handler(update, callback, user, lan):
             candidate.last_name = text
             candidate.save()
             middle_name(update, callback, user, lan)
-    elif user.type == 'middle_name':
+    elif user.type == 'full_name':
         if text == lan['back']:
             vacancies(update, callback, user, lan)
         else:
@@ -242,37 +243,49 @@ def handler(update, callback, user, lan):
                 candidate_image(update, callback, user, lan)
             else:
                 if user.language == 'uz':
-                    error_message = "Tug'ilgan kun formati noto'g'ri. Iltimos, quyidagi formatda kiriting: YYYY-MM-DD"
+                    error_message = lan['date_format_error_text']
                     update.message.reply_text(error_message)
                 elif user.language == 'ru':
-                    error_message = "Формат дня рождения неверен. Пожалуйста, введите в следующем формате: гггг-ММ-ДД"
+                    error_message = lan['date_format_error_text']
                     update.message.reply_text(error_message)
                 else:
-                    error_message = "The birthday format is incorrect. Please enter in the following format: YYYY-MM-DD"
+                    error_message = lan['date_format_error_text']
                     update.message.reply_text(error_message)
     elif user.type == 'candidate_image':
         if text == lan['back']:
             vacancies(update, callback, user, lan)
         else:
             if text:
-                main_phone(update, callback, user, lan)
+                main_phone(update, callback)
             else:
                 image(update, callback, user, lan)
-    elif user.type == 'main_phone':
-        if text == lan['back']:
-            vacancies(update, callback, user, lan)
-        else:
-            candidate = user.candidate
-            candidate.main_phone = text
-            candidate.save()
-            extra_phone(update, callback, user, lan)
     elif user.type == 'extra_phone':
         if text == lan['back']:
             vacancies(update, callback, user, lan)
         else:
-            candidate = user.candidate
-            candidate.extra_phone = text
-            candidate.save()
+            if text:
+                candidate = user.candidate
+                candidate.main_phone = text
+                candidate.save()
+            else:
+                phone = update.message.contact.phone_number
+                candidate = user.candidate
+                candidate.main_phone = phone
+                candidate.save()
+            main_phone(update, callback)
+    elif user.type == 'extra_phone2':
+        if text == lan['back']:
+            vacancies(update, callback, user, lan)
+        else:
+            if text:
+                candidate = user.candidate
+                candidate.extra_phone = text
+                candidate.save()
+            else:
+                phone = update.message.contact.phone_number
+                candidate = user.candidate
+                candidate.extra_phone = phone
+                candidate.save()
             email(update, callback, user, lan)
     elif user.type == 'email':
         if text == lan['back']:
@@ -465,7 +478,9 @@ def image(update, callback, user, lan):
     candidate.image = file.download(
         'static/candidate/images/' + str(candidate.first_name) + str(candidate.last_name) + '.jpg')
     candidate.save()
-    main_phone(update, callback, user, lan)
+    user.type = 'main_phone'
+    user.save()
+    main_phone(update, callback)
 
 
 @log_errors

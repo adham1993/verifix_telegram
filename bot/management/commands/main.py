@@ -1,3 +1,4 @@
+from .log import autorization
 from apps.content.models import (
     FilialMessage,
     RegionMessage,
@@ -25,7 +26,9 @@ from .keyboards import (
     answer_button,
     footer_button_finish,
     write_question_button,
-    footer_back_button
+    footer_back_button,
+    send_contact_main_phone,
+    send_contact_extr_phone
 )
 from apps.company.models import (
     CandidateLanguages,
@@ -189,21 +192,18 @@ def check_candidate(update, callback, user, lan):
     candidate_filter = Candidate.objects.filter(user_profile=user_profile, vacancy=user.vacancy).first()
     if candidate_filter:
         if user.language == 'uz':
-            reply_text = ("Oldin bu vakansiya uchun so'rov qoldirgansiz.✅✅\n Hr hodimlarimiz siz bilan bo'lanishadi.📞 \n\n "
-                          "Malumotlaringizni yangilash imkonyatingiz ham mavjud.♻️")
+            reply_text = lan['already_resume']
         elif user.language == 'ru':
-            reply_text = ("Раньше вы оставляли отклик на эту вакансию.✅✅\n Наши сотрудники отдела кадров делятся с вами.📞 \n\n "
-                          "У вас также есть возможность обновить свои данные.♻️")
+            reply_text = lan['already_resume']
         else:
-            reply_text = ("You've left a postcard for this vacancy before✅✅.\n Our HR staff will be with you.📞 \n\n "
-                          "You also have the opportunity to update your data.♻️")
+            reply_text = lan['already_resume']
     else:
         if user.language == 'uz':
-            reply_text = "Oldin bu vakansiya uchun so'ro'v qoldirmagansiz. So'ro'vnomani to'ldirishingiz mumkin.📝"
+            reply_text = lan['not_blank']
         elif user.language == 'ru':
-            reply_text = "Раньше вы не оставляли отклик на эту вакансию. Вы можете заполнить анкету.📝"
+            reply_text = lan['not_blank']
         else:
-            reply_text = "You haven't left a postcard for this vacancy before. You can fill out the questionnaire.📝"
+            reply_text = lan['not_blank']
     reply_markup = check_candidate_button(lan)
     update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     if user.vacancy.main_office:
@@ -215,6 +215,8 @@ def check_candidate(update, callback, user, lan):
 
 
 def resume_start(update, callback, user, lan):
+    user.language_filter = 1
+    user.save()
     bot_username = callback.bot.username
     user_profile = UserProfile.objects.filter(bot_username=bot_username).first()
     resume_filter = user.resume_filter
@@ -224,15 +226,15 @@ def resume_start(update, callback, user, lan):
         user.save()
     else:
         pass
-    if not resume_filter.first_name:
-        last_name(update, callback, user, lan)
+    if not resume_filter.full_name:
+        gender(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Ismingini yuboring👇"
+            reply_text = lan['send_full_name']
         elif user.language == 'ru':
-            reply_text = "Отправить свое имя👇"
+            reply_text = lan['send_full_name']
         else:
-            reply_text = "Send your first name👇"
+            reply_text = lan['send_full_name']
         reply_markup = footer_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'resume_start'
@@ -279,11 +281,11 @@ def gender(update, callback, user, lan):
         birthday(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Jinsingizni belgilang👇"
+            reply_text = lan['send_gender']
         elif user.language == 'ru':
-            reply_text = "Укажите свой пол👇"
+            reply_text = lan['send_gender']
         else:
-            reply_text = "Mark your gender👇"
+            reply_text = lan['send_gender']
         reply_markup = gender_inline(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'gender_callback'
@@ -296,13 +298,16 @@ def birthday(update, callback, user, lan):
         candidate_image(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Tug'ilgan kuningizni manunadagidek kiriting.🔖 \n\n Namuna: 2024-02-14👈👈"
+            reply_text = lan['send_birthday']
         elif user.language == 'ru':
-            reply_text = "Введите дату своего рождения, как в примере.🔖 \n\n Пример: 2024-02-14👈👈"
+            reply_text = lan['send_birthday']
         else:
-            reply_text = "Enter your birthday as in the sample.🔖 \n\n Sample: 2024-02-14👈👈"
+            reply_text = lan['send_birthday']
         reply_markup = footer_button(lan)
-        update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        if update.callback_query:
+            update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        else:
+            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'birthday'
         user.save()
 
@@ -313,49 +318,88 @@ def candidate_image(update, callback, user, lan):
         main_phone(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Rasmingizni yuboring.📤 \n\n Agar bo'lmasa yo'q dey yozing.🖌"
+            reply_text = lan['send_photo']
         elif user.language == 'ru':
-            reply_text = "Отправьте свою фотографию.📤 \n\n Напишите нет, если нет.🖌"
+            reply_text = lan['send_photo']
         else:
-            reply_text = "Send your photo.📤 \n\n If not write no dey.🖌"
+            reply_text = lan['send_photo']
         reply_markup = footer_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'candidate_image'
         user.save()
 
 
+@autorization
 def main_phone(update, callback, user, lan):
-    resume_filter = user.resume_filter
-    if not resume_filter.main_phone:
-        extra_phone(update, callback, user, lan)
-    else:
-        if user.language == 'uz':
-            reply_text = "Asosiy telefon raqamingizni yuboring📱"
-        elif user.language == 'ru':
-            reply_text = "Отправьте свой основной номер телефона📱"
+    text = update.message.text
+    if user.type == 'main_phone':
+        resume_filter = user.resume_filter
+        if not resume_filter.main_phone:
+            email(update, callback, user, lan)
         else:
-            reply_text = "Send your main phone number📱"
-        reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-        user.type = 'main_phone'
-        user.save()
-
-
-def extra_phone(update, callback, user, lan):
-    resume_filter = user.resume_filter
-    if not resume_filter.extra_phone:
+            if user.language == 'uz':
+                reply_text = lan['send_main_phone_text']
+            elif user.language == 'ru':
+                reply_text = lan['send_main_phone_text']
+            else:
+                reply_text = lan['send_main_phone_text']
+            reply_markup = send_contact_main_phone(lan)
+            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+            user.type = 'extra_phone'
+            user.save()
+    elif user.type == 'extra_phone':
+        resume_filter = user.resume_filter
+        if not resume_filter.extra_phone:
+            email(update, callback, user, lan)
+        else:
+            if text:
+                candidate = user.candidate
+                candidate.main_phone = text
+                candidate.save()
+            else:
+                phone = update.message.contact.phone_number
+                candidate = user.candidate
+                candidate.main_phone = phone
+                candidate.save()
+            if user.language == 'uz':
+                reply_text = lan['send_extra_phone_text']
+            elif user.language == 'ru':
+                reply_text = lan['send_extra_phone_text']
+            else:
+                reply_text = lan['send_extra_phone_text']
+            reply_markup = send_contact_extr_phone(lan)
+            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+            user.type = 'extra_phone2'
+            user.save()
+    else:
+        if text:
+            candidate = user.candidate
+            candidate.extra_phone = text
+            candidate.save()
+        else:
+            phone = update.message.contact.phone_number
+            candidate = user.candidate
+            candidate.extra_phone = phone
+            candidate.save()
         email(update, callback, user, lan)
-    else:
-        if user.language == 'uz':
-            reply_text = "Qo'shimcha telefon raqamingizni yuboring.📱 \n\n Agar bo'lmasa yo'q dey yozing.🖊"
-        elif user.language == 'ru':
-            reply_text = "Отправьте свой дополнительный номер телефона.📱 \n\n Напишите нет, если нет.🖊"
-        else:
-            reply_text = "Send your additional phone number.📱 \n\n If not write no dey.🖊"
-        reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-        user.type = 'extra_phone'
-        user.save()
+
+
+# @autorization
+# def extra_phone(update, callback, user, lan):
+#     resume_filter = user.resume_filter
+#     if not resume_filter.extra_phone:
+#         email(update, callback, user, lan)
+#     else:
+#         if user.language == 'uz':
+#             reply_text = "Qo'shimcha telefon raqamingizni yuboring.📱"
+#         elif user.language == 'ru':
+#             reply_text = "Отправьте свой дополнительный номер телефона.📱"
+#         else:
+#             reply_text = "Send your additional phone number.📱"
+#         reply_markup = send_contact_extr_phone(lan)
+#         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+#         user.type = 'extra_phone'
+#         user.save()
 
 
 def email(update, callback, user, lan):
@@ -364,11 +408,11 @@ def email(update, callback, user, lan):
         address(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Email adresingizni yuboring📧 \n\n Agar bo'lmasa yo'q dey yozing.🖊"
+            reply_text = lan['send_email']
         elif user.language == 'ru':
-            reply_text = "Отправить свой адрес электронной почты📧 \n\n Напишите нет, если нет.🖊"
+            reply_text = lan['send_email']
         else:
-            reply_text = "Send your Email address📧 \n\n If not write no dey.🖊"
+            reply_text = lan['send_email']
         reply_markup = footer_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'email'
@@ -381,11 +425,11 @@ def address(update, callback, user, lan):
         legal_address(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Hozir yashab turgan adresingizni to'liq yozib yuboring.🪧🪧"
+            reply_text = lan['send_address']
         elif user.language == 'ru':
-            reply_text = "Напишите полный адрес, по которому вы сейчас живете.🪧🪧"
+            reply_text = lan['send_address']
         else:
-            reply_text = "Write down the full address you are currently living in.🪧🪧"
+            reply_text = lan['send_address']
         reply_markup = footer_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'address'
@@ -398,11 +442,11 @@ def legal_address(update, callback, user, lan):
         wage_expectation(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Qonuniy adresingizni to'liq yozib yuboring🪧"
+            reply_text = lan['send_legal_address']
         elif user.language == 'ru':
-            reply_text = "Напишите полный юридический адрес🪧"
+            reply_text = lan['send_legal_address']
         else:
-            reply_text = "Write down your legal address in full🪧"
+            reply_text = lan['send_legal_address']
         reply_markup = footer_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'legal_address'
@@ -415,11 +459,11 @@ def wage_expectation(update, callback, user, lan):
         node(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Siz ush ushbu vakansiya uchun qancha oylig talab qilasiz.💸💰"
+            reply_text = "send_wage_expectation"
         elif user.language == 'ru':
-            reply_text = "Сколько месяцев вам потребуется для этой вакансии.💸💰"
+            reply_text = "send_wage_expectation"
         else:
-            reply_text = "How many months do you require ush for this vacancy.💸💰"
+            reply_text = "send_wage_expectation"
         reply_markup = footer_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'wage_expectation'
@@ -432,11 +476,11 @@ def node(update, callback, user, lan):
         language_inline_fun(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "O'zingiz haqingida qo'shimcha malumotlar. Ustunlik jihatlarinigiz hamda kamchiklaringizni yuboring.📝📝"
+            reply_text = lan['send_note']
         elif user.language == 'ru':
-            reply_text = "Дополнительная информация о себе. Опубликуйте свои преимущества, а также недостатки.📝📝"
+            reply_text = lan['send_note']
         else:
-            reply_text = "Additional information about yourself. Send your preference aspects as well as your ventricles.📝📝"
+            reply_text = lan['send_note']
         reply_markup = footer_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'node'
@@ -449,11 +493,11 @@ def language_inline_fun(update, callback, user, lan):
         education_inline_fun(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Biladigan tilingizni va darajangizni belgilang👇👇"
+            reply_text = lan['send_language']
         elif user.language == 'ru':
-            reply_text = "Установите язык и уровень, который вы знаете👇👇"
+            reply_text = lan['send_language']
         else:
-            reply_text = "Mark the language and level you know👇👇"
+            reply_text = lan['send_language']
         reply_markup = language_inline(callback, user, lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'language_inline_fun'
@@ -466,11 +510,11 @@ def education_inline_fun(update, callback, user, lan):
         your_resume(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = "Bilim darajangizni belgilang"
+            reply_text = lan['send_education']
         elif user.language == 'ru':
-            reply_text = "Установите свой уровень знаний"
+            reply_text = lan['send_education']
         else:
-            reply_text = "Set your level of knowledge"
+            reply_text = lan['send_education']
         reply_markup = education_inline(callback, user, lan)
         if update.callback_query:
             if resume_filter.language:
@@ -572,14 +616,11 @@ def finish_resume(update, callback, user, lan):
     candidate = user.candidate
     send_candidate_data_to_api(candidate)
     if user.language == 'uz':
-        reply_text = ("Tabriklaymiz sizning malumotlaringiz qabul qilindi.✅✅ \n\n Yozma savollar hamda shu vakansiya"
-                      " bo'yicha qisqa test bajarishingiz kerak bo'ladi👇👇")
+        reply_text = lan['send_finish_resume']
     elif user.language == 'ru':
-        reply_text = ("Tabriklaymiz sizning malumotlaringiz qabul qilindi.✅✅ \n\n Вам нужно будет выполнить "
-                      "письменные вопросы, а также короткий тест на эту вакансию👇👇")
+        reply_text = lan['send_finish_resume']
     else:
-        reply_text = ("Congratulations your information received.✅✅ \n\n You will need to do written questions as "
-                      "well as a short test on the same vacancy👇👇")
+        reply_text = lan['send_finish_resume']
     candidate_languages = CandidateLanguages.objects.filter(candidate=candidate)
     text = ''
     for candidate_language in candidate_languages:
@@ -720,11 +761,11 @@ def test_start(update, callback, user, lan):
         user.save()
     else:
         if user.language == 'uz':
-            reply_text = 'Test savollari kiritilmagan.'
+            reply_text = lan['test_not_found']
         elif user.language == 'ru':
-            reply_text = 'Тестовые вопросы не включены'
+            reply_text = lan['test_not_found']
         else:
-            reply_text = 'Test questions not included'
+            reply_text = lan['test_not_found']
         reply_markup = footer_back_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'test_start'
@@ -857,11 +898,11 @@ def write_question_start(update, callback, user, lan):
         user.save()
     else:
         if user.language == 'uz':
-            reply_text = 'Savollar kiritilmagan. Orqaga qaytib test ishlashingiz kerak.👇'
+            reply_text = lan['write_question_not_found']
         elif user.language == 'ru':
-            reply_text = 'Вопросы не включены. Вы должны работать в обратном тестировании.👇'
+            reply_text = lan['write_question_not_found']
         else:
-            reply_text = 'Questions not included. You have to work the test back👇'
+            reply_text = lan['write_question_not_found']
         reply_markup = footer_back_button(lan)
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'write_question_not'
@@ -871,14 +912,11 @@ def write_question_start(update, callback, user, lan):
 
 def write_answer(update, callback, user, lan):
     if user.language == 'uz':
-        reply_text = ("Javoblaringiz qabul qilindi. Orqaga qaytib test ishlashingiz kerak."
-                      " \n\n Agar ishlagan bo'lsangiz orqaga qaytib bosh sahifaga o'ting👇👇")
+        reply_text = lan['write_answer_text']
     elif user.language == 'ru':
-        reply_text = ("Ваши ответы приняты. Вы должны работать в обратном тестировании. "
-                      " \n\n Вернитесь на домашнюю страницу, если вы работали👇👇")
+        reply_text = lan['write_answer_text']
     else:
-        reply_text = ("Your answers were accepted. You have to work the test back. "
-                      " \n\n Go back to the home page if you've worked👇👇")
+        reply_text = lan['write_answer_text']
     reply_markup = footer_back_button(lan)
     update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'write_answer'

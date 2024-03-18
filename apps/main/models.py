@@ -8,6 +8,7 @@ class Education(models.Model):
     name_uz = models.CharField(max_length=64)
     name_ru = models.CharField(max_length=64)
     name_en = models.CharField(max_length=64)
+    order = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -20,6 +21,7 @@ class LanguageLevel(models.Model):
     name_uz = models.CharField(max_length=64)
     name_ru = models.CharField(max_length=64)
     name_en = models.CharField(max_length=64)
+    order = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name_uz or self.name_ru
@@ -31,6 +33,7 @@ class Language(models.Model):
     name_uz = models.CharField(max_length=64)
     name_ru = models.CharField(max_length=64)
     name_en = models.CharField(max_length=64)
+    order = models.IntegerField(default=1)
 
     def __str__(self):
         return self.name_uz or self.name_ru
@@ -43,6 +46,7 @@ class Question(models.Model):
     title_ru = models.TextField(null=True, blank=True)
     title_en = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+    order = models.IntegerField(default=1)
 
     def __str__(self):
         return self.title_uz or self.title_ru
@@ -57,6 +61,7 @@ class Answer(models.Model):
     title_en = models.TextField(null=True, blank=True)
     current_answer = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+    order = models.IntegerField(default=1)
 
     def __str__(self):
         return self.title_uz or self.title_ru

@@ -241,8 +241,8 @@ def gender_inline(lan):
 def language_inline(callback, user, lan):
     bot_username = callback.bot.username
     user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-    languages = Language.objects.filter(user_profile=user_profile_filter)
-    languages_level = LanguageLevel.objects.filter(user_profile=user_profile_filter)
+    languages = Language.objects.filter(user_profile=user_profile_filter).order_by('order')
+    languages_level = LanguageLevel.objects.filter(user_profile=user_profile_filter).order_by('order')
     keyboard = []
     for language in languages:
         key = []
@@ -267,6 +267,7 @@ def language_inline(callback, user, lan):
             user.inline_type = 'language_level'
             user.save()
         keyboard.append(key)
+        user.language_filter = language.order
     the_end = [InlineKeyboardButton(text=lan['the_end_language'], callback_data='the_end_language')]
     keyboard.append(the_end)
     reply_markup = InlineKeyboardMarkup(keyboard, resize_keyboard=True)
@@ -276,7 +277,7 @@ def language_inline(callback, user, lan):
 def education_inline(callback, user, lan):
     bot_username = callback.bot.username
     user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-    educations = Education.objects.filter(user_profile=user_profile_filter)
+    educations = Education.objects.filter(user_profile=user_profile_filter).order_by('order')
     keyboard = []
     a = []
     for education in educations:
@@ -456,4 +457,16 @@ def footer_back_button(lan):
         [KeyboardButton(lan['finish_back'])]
     ]
     reply_markup = ReplyKeyboardMarkup(keyboard, resize_keyboard=True)
+    return reply_markup
+
+
+def send_contact_main_phone(lan):
+    reply_keyboard = [[KeyboardButton(text=lan['send_main_phone'], request_contact=True)]]
+    reply_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True, one_time_keyboard=True)
+    return reply_markup
+
+
+def send_contact_extr_phone(lan):
+    reply_keyboard = [[KeyboardButton(text=lan['send_extra_phone'], request_contact=True)]]
+    reply_markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True, one_time_keyboard=True)
     return reply_markup

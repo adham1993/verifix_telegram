@@ -10,6 +10,7 @@ from .commands import start
 from .messages import handler, set_language, image
 from .filters import FilterLanguage
 from .callback_queries import callback_query
+from .main import main_phone
 from bot.models import BotToken
 
 
@@ -28,6 +29,7 @@ def webhook(request, token):
     updater.dispatcher.add_handler(MessageHandler(Filters.text, handler))
     updater.dispatcher.add_handler(CallbackQueryHandler(callback_query))
     updater.dispatcher.add_handler(MessageHandler(Filters.photo, image))
+    updater.dispatcher.add_handler(MessageHandler(Filters.contact, main_phone))
     data = json.loads(request.body.decode("utf-8"))
     update = Update.de_json(data, bot)
     updater.dispatcher.process_update(update)
@@ -100,6 +102,7 @@ class Command(BaseCommand):
         # updater.dispatcher.add_handler(MessageHandler(Filters.document, send_document))
         updater.dispatcher.add_handler(MessageHandler(Filters.text, handler))
         updater.dispatcher.add_handler(CallbackQueryHandler(callback_query))
+        updater.dispatcher.add_handler(MessageHandler(Filters.contact, main_phone))
         updater.dispatcher.add_handler(MessageHandler(Filters.photo, image))
 
         return updater

@@ -54,6 +54,7 @@ class UserBot(models.Model):
     q_number = models.IntegerField(default=0)
     true_count = models.IntegerField(default=0)
     write_number = models.IntegerField(default=0)
+    language_filter = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
