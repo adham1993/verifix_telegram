@@ -500,7 +500,7 @@ class FailedCandidateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 class WrittenQuestionAdmin(admin.ModelAdmin):
     list_display = ('id', 'user_profile', 'title_uz')
     list_display_links = ('id', 'user_profile', 'title_uz')
-    list_filter = (VacancyListFilter, )
+    # list_filter = (VacancyListFilter, )
 
     def get_exclude(self, request, obj=None):
         if request.user.is_superuser:
@@ -508,11 +508,11 @@ class WrittenQuestionAdmin(admin.ModelAdmin):
         else:
             return ('user_profile', )
 
-    def formfield_for_manytomany(self, db_field, request, **kwargs):
-        if db_field.name == 'vacancy' and not request.user.is_superuser:
-            user_profile = UserProfile.objects.get(user=request.user)
-            kwargs["queryset"] = Vacancy.objects.filter(user_profile=user_profile)
-        return super().formfield_for_manytomany(db_field, request, **kwargs)
+    # def formfield_for_manytomany(self, db_field, request, **kwargs):
+    #     if db_field.name == 'vacancy' and not request.user.is_superuser:
+    #         user_profile = UserProfile.objects.get(user=request.user)
+    #         kwargs["queryset"] = Vacancy.objects.filter(user_profile=user_profile)
+    #     return super().formfield_for_manytomany(db_field, request, **kwargs)
 
     def get_queryset(self, request):
         queryset = super().get_queryset(request)
@@ -536,15 +536,15 @@ class WrittenQuestionAdmin(admin.ModelAdmin):
 
 @admin.register(WrittenAnswer)
 class WrittenAnswerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_profile', 'vacancy', 'title_uz')
-    list_display_links = ('id', 'user_profile', 'vacancy', 'title_uz')
-    list_filter = (VacancyListFilter, )
+    list_display = ('id', 'user_profile', 'title_uz')
+    list_display_links = ('id', 'user_profile', 'title_uz')
+    # list_filter = (VacancyListFilter, )
 
     def get_exclude(self, request, obj=None):
         if request.user.is_superuser:
             return super().get_exclude(request, obj)
         else:
-            return ('user_profile', 'vacancy')
+            return ('user_profile', )
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if db_field.name == 'write_question' and not request.user.is_superuser:

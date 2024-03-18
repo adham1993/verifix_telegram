@@ -16,10 +16,10 @@ words = {
     'sayt_link': "Link",
 
     # home
-    'vacancy': 'Filial 🏚',
+    'vacancy': 'Filiallar 🏚',
     'main_office': 'Bosh ofis 🕍',
     'contact': 'Kontaktlar 📞',
-    'about_company': 'Kampanya haqida 📜',
+    'about_company': 'Biz haqimizda 📜',
 
     #resume
     'resume_start': 'Boshlash 🚀',
@@ -43,14 +43,12 @@ words = {
     'send_note': "O'zingiz haqingida qo'shimcha malumotlar. Ustunlik jihatlarinigiz hamda kamchiklaringizni yuboring 📝",
     'send_language': "Biladigan tilingizni va bilish darajangizni belgilang 👇",
     'send_education': "Bilim darajangizni belgilang",
-    'send_finish_resume': "Tabriklaymiz sizning malumotlaringiz qabul qilindi ✅\n\n" "Yozma "
-                          "savollar hamda shu vakansiya bo'yicha qisqa testdan o'tishingiz kerak bo'ladi 👇",
+    'send_finish_resume': "Tabriklaymiz sizning malumotlaringiz qabul qilindi ✅\n\n" "Yozma savollar hamda shu vakansiya bo'yicha qisqa testdan o'tishingiz kerak bo'ladi 👇",
     'test_not_found': "Test savollari kiritilmagan.",
-    'write_question_not_found': "Savollar kiritilmagan. Test ishlashingiz kerak 👇",
-    'write_answer_text': "Javoblaringiz qabul qilindi. Orqaga qaytib test ishlashingiz kerak.👇",
+    'write_question_not_found': "Savollar kiritilmagan. Orqaga qaytib test ishlashingiz kerak 👇",
+    'write_answer_text': "Javoblaringiz qabul qilindi. Orqaga qaytib test ishlashingiz kerak.\n\n" "Agar ishlagan bo'lsangiz orqaga qaytib bosh sahifaga o'ting 👇",
     'date_format_error_text': "Tug'ilgan kun formati noto'g'ri. Iltimos, quyidagi formatda kiriting: KK-OO-YYYY",
-    'data_success': "Sizning javoblaringiz qabul qilindi.",
-
+    'data_success': "Javoblaringiz qabul qilindi. Hodimlar siz bilan bog'lanishadi",
     #gender
     'mail': 'Erkak',
     'femail': 'Ayol',
@@ -67,7 +65,7 @@ words = {
 
     #write question
     'write_question': 'Savollarga javob berish ✍️',
-    'write_question_start': "Savol javobni boshlash 👈",
+    'write_question_start': "Boshlash 🚀",
 
     'finish_back': 'Orqaga qaytish ⬅️',
     'send_main_phone': 'Asosiy telefon raqami',

@@ -154,7 +154,6 @@ class FailedCandidate(models.Model):
 
 class WrittenQuestion(models.Model):
     user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True)
-    vacancy = models.ManyToManyField('company.Vacancy')
     title_uz = models.TextField()
     title_ru = models.TextField()
     title_en = models.TextField()
@@ -166,7 +165,6 @@ class WrittenQuestion(models.Model):
 
 class WrittenAnswer(models.Model):
     user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True)
-    vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE)
     candidate = models.ForeignKey('company.Candidate', on_delete=models.CASCADE)
     write_question = models.ForeignKey(WrittenQuestion, on_delete=models.CASCADE)
     title_uz = models.TextField()

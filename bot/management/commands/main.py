@@ -862,12 +862,12 @@ def answer_fun(update, callback, user, lan):
 
 def write_question_start(update, callback, user, lan):
     vacancy = user.vacancy
-    questions = WrittenQuestion.objects.filter(vacancy=vacancy)
+    questions = WrittenQuestion.objects.all()
     if questions:
         if user.write_number == len(questions):
             user.write_number = 0
             user.save()
-            write_answer(update, callback, user, lan)
+            finish_resume(update, callback, user, lan)
         else:
             for question in range(user.write_number, len(questions)):
                 if user.language == 'uz':

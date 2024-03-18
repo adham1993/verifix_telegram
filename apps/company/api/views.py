@@ -7,6 +7,7 @@ from apps.company.models import (
 )
 import requests
 import json
+from datetime import datetime, date
 
 
 class RegionCreateView(APIView):
@@ -96,12 +97,16 @@ class VacancyCreateView(APIView):
 def send_candidate_data_to_api(candidate):
     username = "askoishbot@pro"
     password = "123456"
+    print(candidate.birthday)
+    birthday_str = candidate.birthday.strftime('%d-%m-%Y')
+    birthday = datetime.strptime(birthday_str, '%d-%m-%Y')
+    print(birthday_str)
     data = {
         "first_name": candidate.first_name,
         "last_name": candidate.last_name,
         "middle_name": candidate.middle_name,
         "gender": candidate.gender,
-        "birthday": str(candidate.birthday),
+        "birthday": birthday_str,
         "region_id": candidate.region.id,
         "main_phone": candidate.main_phone,
         "extra_phone": candidate.extra_phone,
@@ -121,6 +126,7 @@ def send_candidate_data_to_api(candidate):
     api_url = "https://app.verifix.com/b/vhr/api/v1/pro/candidate$create"
 
     response = requests.post(api_url, json=data, auth=(username, password))
+    print(response.text)
     try:
         json_response = response.json()
         print(json_response)
