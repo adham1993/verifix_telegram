@@ -912,7 +912,7 @@ def write_question_start(update, callback, user, lan):
     vacancy = user.vacancy
     bot_username = callback.bot.username
     user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-    questions = WrittenQuestion.objects.filter(user_profile=user_profile_filter)
+    questions = WrittenQuestion.objects.filter(user_profile=user_profile_filter).order_by('order')
     if questions:
         if user.write_number == len(questions):
             user.write_number = 0

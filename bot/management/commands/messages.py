@@ -399,7 +399,7 @@ def handler(update, callback, user, lan):
     elif user.type == 'write_question':
         bot_username = callback.bot.username
         user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
-        questions = WrittenQuestion.objects.filter(user_profile=user_profile_filter)
+        questions = WrittenQuestion.objects.filter(user_profile=user_profile_filter).order_by('order')
         write_question = questions[user.write_number]
         if write_question:
             if user.language == 'uz':

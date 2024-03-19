@@ -157,6 +157,7 @@ class WrittenQuestion(models.Model):
     title_uz = models.TextField()
     title_ru = models.TextField()
     title_en = models.TextField()
+    order = models.IntegerField(default=1)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
