@@ -48,8 +48,13 @@ def callback_query(update, callback, user, lan):
         bot_username = callback.bot.username
         user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
         languages = Language.objects.filter(user_profile=user_profile_filter)
-        if query.data == 'the_end_language':
-            education_inline_fun(update, callback, user, lan)
+        if query.data == 'not_selected':
+            user.language_filter += 1
+            user.save()
+            if user.language_filter >= len(languages):
+                education_inline_fun(update, callback, user, lan)
+            else:
+                language_inline_fun(update, callback, user, lan)
         elif query.data.startswith('a') and query.data[1:].isdigit():
             language_level_id = int(query.data[1:])
             language_level = LanguageLevel.objects.filter(id=language_level_id).first()
@@ -63,6 +68,12 @@ def callback_query(update, callback, user, lan):
             else:
                 candidate_language_filter.language_level = language_level
                 candidate_language_filter.save()
+            user.language_filter += 1
+            user.save()
+            if user.language_filter >= len(languages):
+                education_inline_fun(update, callback, user, lan)
+            else:
+                language_inline_fun(update, callback, user, lan)
         else:
             language_filter = user.candidate_language
             candidate_language_filter = CandidateLanguages.objects.filter(
@@ -84,12 +95,12 @@ def callback_query(update, callback, user, lan):
                 candidate_language_create.save()
                 user.candidate_language = language_filter
                 user.save()
-        user.language_filter += 1
-        user.save()
-        if user.language_filter >= len(languages):
-            education_inline_fun(update, callback, user, lan)
-        else:
-            language_inline_fun(update, callback, user, lan)
+            user.language_filter += 1
+            user.save()
+            if user.language_filter >= len(languages):
+                education_inline_fun(update, callback, user, lan)
+            else:
+                language_inline_fun(update, callback, user, lan)
     elif user.type == 'education_inline_fun':
         education_filter = Education.objects.filter(id=int(query.data)).first()
         if education_filter:

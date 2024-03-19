@@ -97,10 +97,7 @@ class VacancyCreateView(APIView):
 def send_candidate_data_to_api(candidate):
     username = "askoishbot@pro"
     password = "123456"
-    print(candidate.birthday)
-    birthday_str = candidate.birthday.strftime('%d-%m-%Y')
-    birthday = datetime.strptime(birthday_str, '%d-%m-%Y')
-    print(birthday_str)
+    birthday_str = candidate.birthday.strftime('%d.%m.%Y')
     data = {
         "first_name": candidate.first_name,
         "last_name": candidate.last_name,

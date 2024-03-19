@@ -33,7 +33,7 @@ words = {
     'not_blank': "You have not previously applied for this vacancy. You can fill out the form 📝",
     'send_full_name': "Please enter your full name 👇",
     'send_gender': "Specify your gender 👇",
-    'send_birthday': "Enter your date of birth in the following format: DD-MM-YYYY🔖 \n\n" "Example: 31-12-2000 👈",
+    'send_birthday': "Enter your date of birth in the following format: DD-MM-YYYY🔖 \n\n" "Example: 31.12.2000 👈",
     'send_photo': "Upload your photo 📤",
     'send_main_phone_text': "Send your main phone number 📱",
     'send_extra_phone_text': "Send your extra phone number 📱",
@@ -44,12 +44,14 @@ words = {
     'send_note': "Provide additional information about yourself. Specify your strengths and areas for improvement 📝",
     'send_language': "Indicate your language proficiency level 👇",
     'send_education': "Indicate your education level",
-    'send_finish_resume': "Congratulations! Your information has been accepted ✅ \n\n" "Now you need to answer questions and take a brief test 👇",
+    'send_finish_resume': "For your data to be accepted ✅ \n\n" "You will need to take a short test on the same vacancy 👇",
     'test_not_found': "Test questions have not been entered.",
     'write_question_not_found': "Answers have not been entered for the questions. You need to go back and take the test 👇",
     'write_answer_text': "Your answers have been accepted. Please go back and take the test if you have finished \n\n" "If you have finished, please return to the home page 👇",
-    'date_format_error_text': "Incorrect date format. Please enter in the following format: DD-MM-YYYY",
+    'date_format_error_text': "Incorrect date format. Please enter in the following format: DD.MM.YYYY",
     'data_success': "Javoblaringiz qabul qilindi. Hodimlar siz bilan bog'lanishadi",
+
+    'not_selected': "not selected",
 
     # gender
     'mail': 'Male',

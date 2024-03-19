@@ -39,7 +39,8 @@ from apps.main.models import (
     SuccessCandidate,
     FailedCandidate,
     WrittenQuestion,
-    WrittenAnswer
+    WrittenAnswer,
+    Language
 )
 from apps.company.api.views import send_candidate_data_to_api
 
@@ -230,8 +231,7 @@ def resume_start(update, callback, user, lan):
             reply_text = lan['send_full_name']
         else:
             reply_text = lan['send_full_name']
-        reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'resume_start'
         user.save()
 
@@ -300,9 +300,9 @@ def birthday(update, callback, user, lan):
             reply_text = lan['send_birthday']
         reply_markup = footer_button(lan)
         if update.callback_query:
-            update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+            update.callback_query.message.reply_text(text=reply_text, parse_mode='HTML')
         else:
-            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+            update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'birthday'
         user.save()
 
@@ -310,7 +310,7 @@ def birthday(update, callback, user, lan):
 def candidate_image(update, callback, user, lan):
     resume_filter = user.resume_filter
     if not resume_filter.image:
-        main_phone(update, callback, user, lan)
+        main_phone(update, callback)
     else:
         if user.language == 'uz':
             reply_text = lan['send_photo']
@@ -319,64 +319,108 @@ def candidate_image(update, callback, user, lan):
         else:
             reply_text = lan['send_photo']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'candidate_image'
         user.save()
 
 
 @autorization
 def main_phone(update, callback, user, lan):
-    text = update.message.text
-    if user.type == 'main_phone':
-        resume_filter = user.resume_filter
-        if not resume_filter.main_phone:
-            email(update, callback, user, lan)
-        else:
-            if user.language == 'uz':
-                reply_text = lan['send_main_phone_text']
-            elif user.language == 'ru':
-                reply_text = lan['send_main_phone_text']
+    if update.callback_query:
+        print('sss')
+        if user.type == 'main_phone':
+            resume_filter = user.resume_filter
+            if not resume_filter.main_phone:
+                email(update, callback, user, lan)
             else:
-                reply_text = lan['send_main_phone_text']
-            reply_markup = send_contact_main_phone(lan)
-            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-            user.type = 'extra_phone'
-            user.save()
-    elif user.type == 'extra_phone':
-        resume_filter = user.resume_filter
-        if not resume_filter.extra_phone:
+                if user.language == 'uz':
+                    reply_text = lan['send_main_phone_text']
+                elif user.language == 'ru':
+                    reply_text = lan['send_main_phone_text']
+                else:
+                    reply_text = lan['send_main_phone_text']
+                reply_markup = send_contact_main_phone(lan)
+                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+                user.type = 'extra_phone'
+                user.save()
+        elif user.type == 'extra_phone':
+            resume_filter = user.resume_filter
+            if not resume_filter.extra_phone:
+                email(update, callback, user, lan)
+            else:
+                if text:
+                    candidate = user.candidate
+                    candidate.main_phone = text
+                    candidate.save()
+                else:
+                    phone = update.message.contact.phone_number
+                    candidate = user.candidate
+                    candidate.main_phone = phone
+                    candidate.save()
+                if user.language == 'uz':
+                    reply_text = lan['send_extra_phone_text']
+                elif user.language == 'ru':
+                    reply_text = lan['send_extra_phone_text']
+                else:
+                    reply_text = lan['send_extra_phone_text']
+                reply_markup = send_contact_extr_phone(lan)
+                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+                user.type = 'extra_phone2'
+                user.save()
+        else:
             email(update, callback, user, lan)
+    else:
+        text = update.message.text
+        if user.type == 'main_phone':
+            resume_filter = user.resume_filter
+            if not resume_filter.main_phone:
+                email(update, callback, user, lan)
+            else:
+                if user.language == 'uz':
+                    reply_text = lan['send_main_phone_text']
+                elif user.language == 'ru':
+                    reply_text = lan['send_main_phone_text']
+                else:
+                    reply_text = lan['send_main_phone_text']
+                reply_markup = send_contact_main_phone(lan)
+                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+                user.type = 'extra_phone'
+                user.save()
+        elif user.type == 'extra_phone':
+            resume_filter = user.resume_filter
+            if not resume_filter.extra_phone:
+                email(update, callback, user, lan)
+            else:
+                if text:
+                    candidate = user.candidate
+                    candidate.main_phone = text
+                    candidate.save()
+                else:
+                    phone = update.message.contact.phone_number
+                    candidate = user.candidate
+                    candidate.main_phone = phone
+                    candidate.save()
+                if user.language == 'uz':
+                    reply_text = lan['send_extra_phone_text']
+                elif user.language == 'ru':
+                    reply_text = lan['send_extra_phone_text']
+                else:
+                    reply_text = lan['send_extra_phone_text']
+                reply_markup = send_contact_extr_phone(lan)
+                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+                user.type = 'extra_phone2'
+                user.save()
         else:
             if text:
                 candidate = user.candidate
-                candidate.main_phone = text
+                candidate.extra_phone = text
                 candidate.save()
             else:
                 phone = update.message.contact.phone_number
                 candidate = user.candidate
-                candidate.main_phone = phone
+                candidate.extra_phone = phone
                 candidate.save()
-            if user.language == 'uz':
-                reply_text = lan['send_extra_phone_text']
-            elif user.language == 'ru':
-                reply_text = lan['send_extra_phone_text']
-            else:
-                reply_text = lan['send_extra_phone_text']
-            reply_markup = send_contact_extr_phone(lan)
-            update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
-            user.type = 'extra_phone2'
-            user.save()
-    else:
-        if text:
-            candidate = user.candidate
-            candidate.extra_phone = text
-            candidate.save()
-        else:
-            phone = update.message.contact.phone_number
-            candidate = user.candidate
-            candidate.extra_phone = phone
-            candidate.save()
-        email(update, callback, user, lan)
+            email(update, callback, user, lan)
 
 
 # @autorization
@@ -409,7 +453,7 @@ def email(update, callback, user, lan):
         else:
             reply_text = lan['send_email']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'email'
         user.save()
 
@@ -426,7 +470,7 @@ def address(update, callback, user, lan):
         else:
             reply_text = lan['send_address']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'address'
         user.save()
 
@@ -443,7 +487,7 @@ def legal_address(update, callback, user, lan):
         else:
             reply_text = lan['send_legal_address']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'legal_address'
         user.save()
 
@@ -460,7 +504,7 @@ def wage_expectation(update, callback, user, lan):
         else:
             reply_text = lan['send_wage_expectation']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'wage_expectation'
         user.save()
 
@@ -477,22 +521,26 @@ def node(update, callback, user, lan):
         else:
             reply_text = lan['send_note']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+        update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'node'
     user.save()
 
 
 def language_inline_fun(update, callback, user, lan):
     resume_filter = user.resume_filter
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    languages = Language.objects.filter(user_profile=user_profile_filter).order_by('order')
+    language = languages[user.language_filter]
     if not resume_filter.language:
         education_inline_fun(update, callback, user, lan)
     else:
         if user.language == 'uz':
-            reply_text = lan['send_language']
+            reply_text = lan['send_language'] + ' ' + language.name_uz
         elif user.language == 'ru':
-            reply_text = lan['send_language']
+            reply_text = lan['send_language'] + ' ' + language.name_ru
         else:
-            reply_text = lan['send_language']
+            reply_text = lan['send_language'] + ' ' + language.name_en
         reply_markup = language_inline(callback, user, lan)
         if update.callback_query:
             update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
@@ -862,7 +910,9 @@ def answer_fun(update, callback, user, lan):
 
 def write_question_start(update, callback, user, lan):
     vacancy = user.vacancy
-    questions = WrittenQuestion.objects.all()
+    bot_username = callback.bot.username
+    user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+    questions = WrittenQuestion.objects.filter(user_profile=user_profile_filter)
     if questions:
         if user.write_number == len(questions):
             user.write_number = 0
@@ -900,7 +950,7 @@ def write_question_start(update, callback, user, lan):
         user.type = 'write_question'
         user.save()
     else:
-        your_resume(update, callback, user, lan)
+        finish_resume(update, callback, user, lan)
         # if user.language == 'uz':
         #     reply_text = lan['write_question_not_found']
         # elif user.language == 'ru':

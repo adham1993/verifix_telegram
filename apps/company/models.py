@@ -67,8 +67,8 @@ class Vacancy(models.Model):
     region = models.ForeignKey(Region, on_delete=models.CASCADE, null=True, blank=True)
     filial = models.ManyToManyField(Filial, related_name='vacancy_filial', blank=True)
     name_uz = models.CharField(max_length=128)
-    name_ru = models.CharField(max_length=128, null=True, blank=True)
-    name_en = models.CharField(max_length=128, null=True, blank=True)
+    name_ru = models.CharField(max_length=128)
+    name_en = models.CharField(max_length=128)
     description_uz = models.TextField()
     description_ru = models.TextField(null=True, blank=True)
     description_en = models.TextField(null=True, blank=True)
@@ -125,7 +125,7 @@ class Candidate(models.Model):
 
     def save(self, *args, **kwargs):
         if isinstance(self.birthday, str):
-            self.birthday = datetime.strptime(self.birthday, '%d-%m-%Y')
+            self.birthday = datetime.strptime(self.birthday, '%d.%m.%Y')
 
         super().save(*args, **kwargs)
 

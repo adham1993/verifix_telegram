@@ -45,14 +45,14 @@ from apps.company.api.views import send_candidate_data_to_api
 
 
 def is_valid_date_format(date_text):
-    date_pattern = re.compile(r'^\d{2}-\d{2}-\d{4}$')
+    date_pattern = re.compile(r'^\d{2}.\d{2}.\d{4}$')
     return bool(re.match(date_pattern, date_text))
 
 
 @autorization
 def handler(update, callback, user, lan):
-    candidate = user.candidate
-    send_candidate_data_to_api(candidate)
+    # candidate = user.candidate
+    # send_candidate_data_to_api(candidate)
     chat_id = update.message.chat_id
     text = update.message.text
     bot_username = callback.bot.username
@@ -397,46 +397,54 @@ def handler(update, callback, user, lan):
         else:
             pass
     elif user.type == 'write_question':
-        questions = WrittenQuestion.objects.all()
+        bot_username = callback.bot.username
+        user_profile_filter = UserProfile.objects.filter(bot_username=bot_username).first()
+        questions = WrittenQuestion.objects.filter(user_profile=user_profile_filter)
         write_question = questions[user.write_number]
         if write_question:
             if user.language == 'uz':
-                write_answer_filter = WrittenAnswer.objects.filter(candidate=user.candidate)
+                write_answer_filter = WrittenAnswer.objects.filter(candidate=user.candidate,
+                                                                   user_profile=user_profile_filter)
                 if write_answer_filter:
-                    write_answer = WrittenAnswer.objects.filter(candidate=user.candidate).first()
+                    write_answer = WrittenAnswer.objects.filter(candidate=user.candidate,
+                                                                user_profile=user_profile_filter).first()
                     write_answer.title_uz += 'Question: ' + write_question.title_uz + '\n' + 'Answer: ' + text + '\n\n'
                     write_answer.save()
                 else:
                     write_answer_create = WrittenAnswer.objects.create(
-                        user_profile=user.user_profile,
+                        user_profile=user_profile_filter,
                         candidate=user.candidate,
                         write_question=write_question,
                         title_uz='Question: ' + write_question.title_uz + '\n' + 'Answer: ' + text + '\n\n'
                     )
                     write_answer_create.save()
             elif user.language == 'ru':
-                write_answer_filter = WrittenAnswer.objects.filter(candidate=user.candidate)
+                write_answer_filter = WrittenAnswer.objects.filter(candidate=user.candidate,
+                                                                   user_profile=user_profile_filter)
                 if write_answer_filter:
-                    write_answer = WrittenAnswer.objects.filter(candidate=user.candidate).first()
+                    write_answer = WrittenAnswer.objects.filter(candidate=user.candidate,
+                                                                user_profile=user_profile_filter).first()
                     write_answer.title_uz += 'Question: ' + write_question.title_ru + '\n' + 'Answer: ' + text + '\n\n'
                     write_answer.save()
                 else:
                     write_answer_create = WrittenAnswer.objects.create(
-                        user_profile=user.user_profile,
+                        user_profile=user_profile_filter,
                         candidate=user.candidate,
                         write_question=write_question,
                         title_uz='Question: ' + write_question.title_ru + '\n' + 'Answer: ' + text + '\n\n'
                     )
                     write_answer_create.save()
             else:
-                write_answer_filter = WrittenAnswer.objects.filter(candidate=user.candidate)
+                write_answer_filter = WrittenAnswer.objects.filter(candidate=user.candidate,
+                                                                   user_profile=user_profile_filter)
                 if write_answer_filter:
-                    write_answer = WrittenAnswer.objects.filter(candidate=user.candidate).first()
+                    write_answer = WrittenAnswer.objects.filter(candidate=user.candidate,
+                                                                user_profile=user_profile_filter).first()
                     write_answer.title_uz += 'Question: ' + write_question.title_en + '\n' + 'Answer: ' + text + '\n\n'
                     write_answer.save()
                 else:
                     write_answer_create = WrittenAnswer.objects.create(
-                        user_profile=user.user_profile,
+                        user_profile=user_profile_filter,
                         candidate=user.candidate,
                         write_question=write_question,
                         title_uz='Question: ' + write_question.title_en + '\n' + 'Answer: ' + text + '\n\n'

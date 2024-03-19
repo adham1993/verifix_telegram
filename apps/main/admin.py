@@ -197,8 +197,8 @@ class LanguageAdmin(admin.ModelAdmin):
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     # inlines = [AnswerInlineAdmin, ]
-    list_display = ('id', 'vacancy', 'title_uz')
-    list_display_links = ('id', 'vacancy', 'title_uz')
+    list_display = ('id', 'title_uz')
+    list_display_links = ('id', 'title_uz')
     list_filter = (VacancyListFilter, )
 
     def get_exclude(self, request, obj=None):

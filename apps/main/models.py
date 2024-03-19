@@ -41,7 +41,7 @@ class Language(models.Model):
 
 class Question(models.Model):
     user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True)
-    vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE)
+    vacancy = models.ManyToManyField('company.Vacancy')
     title_uz = models.TextField()
     title_ru = models.TextField(null=True, blank=True)
     title_en = models.TextField(null=True, blank=True)
