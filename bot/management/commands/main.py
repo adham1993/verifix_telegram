@@ -825,6 +825,8 @@ def answer_fun(update, callback, user, lan):
     question_count = len(questions)
     check_result = question_count - user.true_count
     if check_result >= 2:
+        candidate.test_status = False
+        candidate.save()
         failed_candidate_create = FailedCandidate.objects.create(
             user_profile=candidate.user_profile,
             bot_user=candidate.bot_user,
@@ -850,6 +852,8 @@ def answer_fun(update, callback, user, lan):
         )
         failed_candidate_create.save()
     else:
+        candidate.test_status = True
+        candidate.save()
         success_candidate_create = SuccessCandidate.objects.create(
             user_profile=candidate.user_profile,
             bot_user=candidate.bot_user,
@@ -883,6 +887,8 @@ def answer_fun(update, callback, user, lan):
     reply_markup = footer_button_finish(lan)
     update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'home_menu'
+    candidate.test_score = user.true_count
+    candidate.save()
     user.true_count = 0
     user.save()
 

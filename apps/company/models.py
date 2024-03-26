@@ -34,6 +34,7 @@ class Region(models.Model):
     title_en = models.TextField()
     image = models.ImageField(upload_to='static/regions/images')
     order = models.IntegerField(default=0)
+    integration_code = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -87,6 +88,7 @@ class Vacancy(models.Model):
     lang_en = models.CharField(max_length=64, verbose_name='Язикы', null=True, blank=True)
     order = models.IntegerField(default=0)
     main_office = models.BooleanField(default=False)
+    vacancy_integration_code = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -121,6 +123,9 @@ class Candidate(models.Model):
     education = models.ManyToManyField(Education, blank=True)
     language_data = models.CharField(max_length=256, null=True, blank=True)
     education_data = models.CharField(max_length=256, null=True, blank=True)
+    chat_id = models.CharField(max_length=128, null=True, blank=True)
+    test_score = models.IntegerField(default=0)
+    test_status = models.BooleanField(default=False)
     add_date = models.DateTimeField(auto_now_add=True)
 
     def save(self, *args, **kwargs):

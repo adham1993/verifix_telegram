@@ -198,7 +198,8 @@ def handler(update, callback, user, lan):
                     region=user.region,
                     filial=user.filial,
                     vacancy=user.vacancy,
-                    full_name=text
+                    full_name=text,
+                    chat_id=user.chat_id
                 )
                 candidate.save()
                 user.candidate = candidate
@@ -415,7 +416,7 @@ def handler(update, callback, user, lan):
                         user_profile=user_profile_filter,
                         candidate=user.candidate,
                         write_question=write_question,
-                        title_uz='Question: ' + write_question.title_uz + '\n' + 'Answer: ' + text + '\n\n'
+                        title='Question: ' + write_question.title_uz + '\n' + 'Answer: ' + text + '\n\n'
                     )
                     write_answer_create.save()
             elif user.language == 'ru':
@@ -431,7 +432,7 @@ def handler(update, callback, user, lan):
                         user_profile=user_profile_filter,
                         candidate=user.candidate,
                         write_question=write_question,
-                        title_uz='Question: ' + write_question.title_ru + '\n' + 'Answer: ' + text + '\n\n'
+                        title='Question: ' + write_question.title_ru + '\n' + 'Answer: ' + text + '\n\n'
                     )
                     write_answer_create.save()
             else:
@@ -447,7 +448,7 @@ def handler(update, callback, user, lan):
                         user_profile=user_profile_filter,
                         candidate=user.candidate,
                         write_question=write_question,
-                        title_uz='Question: ' + write_question.title_en + '\n' + 'Answer: ' + text + '\n\n'
+                        title='Question: ' + write_question.title_en + '\n' + 'Answer: ' + text + '\n\n'
                     )
                     write_answer_create.save()
             user.write_number += 1

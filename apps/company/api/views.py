@@ -8,6 +8,9 @@ from apps.company.models import (
 import requests
 import json
 from datetime import datetime, date
+from apps.main.models import (
+    WrittenAnswer
+)
 
 
 class RegionCreateView(APIView):
@@ -95,32 +98,84 @@ class VacancyCreateView(APIView):
 
 
 def send_candidate_data_to_api(candidate):
+    print(candidate.id)
     username = "askoishbot@pro"
     password = "123456"
     birthday_str = candidate.birthday.strftime('%d.%m.%Y')
+    gender = candidate.gender
+    if gender == 'Erkak' or gender == 'Мужчина' or gender == 'Mail':
+        gender = 'M'
+    elif gender == 'Ayol' or gender == 'Женщины' or gender == 'Femail':
+        gender = 'F'
+    else:
+        gender = None
+
+    write_answers = WrittenAnswer.objects.filter(candidate=candidate)
+    write_answer_list = []
+    print('a', write_answers)
+    for write_answer in write_answers:
+        a = {
+            'code': write_answer.write_integration_code,
+            'value': write_answer.title
+            }
+        write_answer_list.append(a)
+        print('s', write_answer_list)
+    if candidate.test_status:
+        test_failed = 'Y'
+    else:
+        test_failed = 'N'
+    if candidate.full_name:
+        name = candidate.full_name
+        parts = name.split(maxsplit=3)
+        if len(parts) == 3:
+            first, last, middle = parts
+        elif len(parts) == 2:
+            first = parts[0]
+            middle = ""
+            last = parts[-1]
+        else:
+            first = parts[0]
+            middle = ""
+            last = ""
+        print(first)
+        print(last)
+        print(middle)
+    else:
+        first = ''
+        last = ''
+        middle = ''
+    if not candidate.chat_id:
+        chat_id = 1
+    else:
+        chat_id = candidate.chat_id
     data = {
-        "first_name": candidate.first_name,
-        "last_name": candidate.last_name,
-        "middle_name": candidate.middle_name,
-        "gender": candidate.gender,
+        "first_name": first,
+        "last_name": last,
+        "middle_name": middle,
+        "gender": gender,
         "birthday": birthday_str,
-        "region_id": candidate.region.id,
+        "region_id": candidate.region.integration_code,
         "main_phone": candidate.main_phone,
         "extra_phone": candidate.extra_phone,
         "email": candidate.email,
         "address": candidate.address,
         "legal_address": candidate.legal_address,
-        "wage_expectation": candidate.wage_expectation if candidate.wage_expectation else None,
+        "wage_expectation": 1,
         "note": candidate.note,
-        "edu_stage_ids": list(candidate.education.all().values_list('id', flat=True)),
-        "job_ids": None,
+        "edu_stage_ids": list(candidate.education.all().values_list('integration_code', flat=True)),
+        "job_ids": [],
         "langs": [
-            {"lang_id": lang.language.id, "level_id": lang.language_level.id}
+            {"lang_id": lang.language.integration_code, "level_id": lang.language_level.integration_code}
             for lang in candidate.candidate_languages.all()
-        ]
+        ],
+        "fields": write_answer_list,
+        "contact_code": chat_id,
+        "vacancy_id": candidate.vacancy.vacancy_integration_code,
+        "test_failed": test_failed,
+        "test_score": candidate.test_score
     }
     print(data)
-    api_url = "https://app.verifix.com/b/vhr/api/v1/pro/candidate$create"
+    api_url = "https://app.verifix.com/b/vhr/api/v1/pro/candidate$telegram_create"
 
     response = requests.post(api_url, json=data, auth=(username, password))
     print(response.text)

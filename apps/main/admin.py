@@ -536,8 +536,8 @@ class WrittenQuestionAdmin(admin.ModelAdmin):
 
 @admin.register(WrittenAnswer)
 class WrittenAnswerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_profile', 'title_uz')
-    list_display_links = ('id', 'user_profile', 'title_uz')
+    list_display = ('id', 'user_profile', 'title')
+    list_display_links = ('id', 'user_profile', 'title')
     # list_filter = (VacancyListFilter, )
 
     def get_exclude(self, request, obj=None):

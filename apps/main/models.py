@@ -9,6 +9,7 @@ class Education(models.Model):
     name_ru = models.CharField(max_length=64)
     name_en = models.CharField(max_length=64)
     order = models.IntegerField(default=1)
+    integration_code = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -22,6 +23,7 @@ class LanguageLevel(models.Model):
     name_ru = models.CharField(max_length=64)
     name_en = models.CharField(max_length=64)
     order = models.IntegerField(default=1)
+    integration_code = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name_uz or self.name_ru
@@ -34,6 +36,7 @@ class Language(models.Model):
     name_ru = models.CharField(max_length=64)
     name_en = models.CharField(max_length=64)
     order = models.IntegerField(default=1)
+    integration_code = models.IntegerField(default=0)
 
     def __str__(self):
         return self.name_uz or self.name_ru
@@ -168,10 +171,9 @@ class WrittenAnswer(models.Model):
     user_profile = models.ForeignKey('bot.UserProfile', on_delete=models.CASCADE, null=True, blank=True)
     candidate = models.ForeignKey('company.Candidate', on_delete=models.CASCADE)
     write_question = models.ForeignKey(WrittenQuestion, on_delete=models.CASCADE)
-    title_uz = models.TextField()
-    title_ru = models.TextField()
-    title_en = models.TextField()
+    title = models.TextField()
+    write_integration_code = models.CharField(max_length=128, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return self.title_uz or self.title_ru
+        return self.title
