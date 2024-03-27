@@ -103,6 +103,7 @@ class SuccessCandidate(models.Model):
     region = models.ForeignKey('company.Region', on_delete=models.CASCADE, null=True, blank=True)
     filial = models.ForeignKey('company.Filial', on_delete=models.CASCADE, null=True, blank=True)
     vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE, null=True, blank=True)
+    full_name = models.CharField(max_length=128, null=True, blank=True)
     first_name = models.CharField(max_length=128, null=True, blank=True)
     last_name = models.CharField(max_length=128, null=True, blank=True)
     middle_name = models.CharField(max_length=128, null=True, blank=True)
@@ -122,7 +123,7 @@ class SuccessCandidate(models.Model):
     add_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.first_name or self.last_name or self.middle_name
+        return self.full_name or self.first_name or self.last_name
 
 
 class FailedCandidate(models.Model):
@@ -133,6 +134,7 @@ class FailedCandidate(models.Model):
     region = models.ForeignKey('company.Region', on_delete=models.CASCADE, null=True, blank=True)
     filial = models.ForeignKey('company.Filial', on_delete=models.CASCADE, null=True, blank=True)
     vacancy = models.ForeignKey('company.Vacancy', on_delete=models.CASCADE, null=True, blank=True)
+    full_name = models.CharField(max_length=128, null=True, blank=True)
     first_name = models.CharField(max_length=128, null=True, blank=True)
     last_name = models.CharField(max_length=128, null=True, blank=True)
     middle_name = models.CharField(max_length=128, null=True, blank=True)
@@ -152,7 +154,7 @@ class FailedCandidate(models.Model):
     add_date = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.first_name or self.last_name or self.middle_name
+        return self.full_name or self.first_name or self.last_name
 
 
 class WrittenQuestion(models.Model):
@@ -161,6 +163,7 @@ class WrittenQuestion(models.Model):
     title_ru = models.TextField()
     title_en = models.TextField()
     order = models.IntegerField(default=1)
+    write_integration_code = models.CharField(max_length=128, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

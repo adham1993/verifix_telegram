@@ -343,9 +343,7 @@ class SuccessCandidateResource(resources.ModelResource):
     region__name_uz = Field(attribute='region__name_uz', column_name='Region')
     filial__name_uz = Field(attribute='filial__name_uz', column_name='Filial')
     vacancy__name_uz = Field(attribute='vacancy__name_uz', column_name='Vacancy')
-    first_name = Field(attribute='first_name', column_name='First Name')
-    last_name = Field(attribute='last_name', column_name='Last Name')
-    middle_name = Field(attribute='middle_name', column_name='Middle Name')
+    full_name = Field(attribute='full_name', column_name='Full Name')
     gender = Field(attribute='gender', column_name='Gender')
     birthday = Field(attribute='birthday', column_name='Birthday')
     main_phone = Field(attribute='main_phone', column_name='Main Phone')
@@ -365,9 +363,7 @@ class SuccessCandidateResource(resources.ModelResource):
             'region__name_uz',
             'filial__name_uz',
             'vacancy__name_uz',
-            'first_name',
-            'last_name',
-            'middle_name',
+            'full_name',
             'gender',
             'birthday',
             'main_phone',
@@ -386,8 +382,8 @@ class SuccessCandidateResource(resources.ModelResource):
 @admin.register(SuccessCandidate)
 class SuccessCandidateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = SuccessCandidateResource
-    list_display = ('id', 'user_profile', 'company', 'first_name')
-    list_display_links = ('id', 'user_profile', 'company', 'first_name')
+    list_display = ('id', 'user_profile', 'company', 'full_name')
+    list_display_links = ('id', 'user_profile', 'company', 'full_name')
     list_filter = (FilialListFilter, RegionListFilter, VacancyListFilter)
 
     def get_exclude(self, request, obj=None):
@@ -422,9 +418,7 @@ class FailedCandidateResource(resources.ModelResource):
     region__name_uz = Field(attribute='region__name_uz', column_name='Region')
     filial__name_uz = Field(attribute='filial__name_uz', column_name='Filial')
     vacancy__name_uz = Field(attribute='vacancy__name_uz', column_name='Vacancy')
-    first_name = Field(attribute='first_name', column_name='First Name')
-    last_name = Field(attribute='last_name', column_name='Last Name')
-    middle_name = Field(attribute='middle_name', column_name='Middle Name')
+    full_name = Field(attribute='full_name', column_name='Full Name')
     gender = Field(attribute='gender', column_name='Gender')
     birthday = Field(attribute='birthday', column_name='Birthday')
     main_phone = Field(attribute='main_phone', column_name='Main Phone')
@@ -444,9 +438,7 @@ class FailedCandidateResource(resources.ModelResource):
             'region__name_uz',
             'filial__name_uz',
             'vacancy__name_uz',
-            'first_name',
-            'last_name',
-            'middle_name',
+            'full_name',
             'gender',
             'birthday',
             'main_phone',
@@ -465,8 +457,8 @@ class FailedCandidateResource(resources.ModelResource):
 @admin.register(FailedCandidate)
 class FailedCandidateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
     resource_class = FailedCandidateResource
-    list_display = ('id', 'user_profile', 'company', 'first_name')
-    list_display_links = ('id', 'user_profile', 'company', 'first_name')
+    list_display = ('id', 'user_profile', 'company', 'full_name')
+    list_display_links = ('id', 'user_profile', 'company', 'full_name')
     list_filter = (FilialListFilter, RegionListFilter, VacancyListFilter)
 
     def get_exclude(self, request, obj=None):

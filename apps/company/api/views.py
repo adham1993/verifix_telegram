@@ -113,7 +113,7 @@ def send_candidate_data_to_api(candidate):
     write_answer_list = []
     for write_answer in write_answers:
         a = {
-            'code': write_answer.write_integration_code,
+            'code': write_answer.write_question.write_integration_code,
             'value': write_answer.title
             }
         write_answer_list.append(a)
@@ -121,19 +121,21 @@ def send_candidate_data_to_api(candidate):
         test_failed = 'Y'
     else:
         test_failed = 'N'
+    print(candidate.full_name)
     if candidate.full_name:
         name = candidate.full_name
         parts = name.split(maxsplit=3)
-        if len(parts) == 3:
-            first, last, middle = parts
+        print(parts)
+        if len(parts) >= 3:
+            first, last = parts[:2]
+            middle = ' '.join(parts[2:])
         elif len(parts) == 2:
-            first = parts[0]
+            first, last = parts
             middle = ""
-            last = parts[-1]
         else:
             first = parts[0]
-            middle = ""
             last = ""
+            middle = ""
     else:
         first = ''
         last = ''
@@ -171,9 +173,42 @@ def send_candidate_data_to_api(candidate):
     print(data)
     api_url = "https://app.verifix.com/b/vhr/api/v1/pro/candidate$telegram_create"
     headers = {
-        'filial_id': candidate.company.filial_id,
-        'project_code': 'vhr'}
+        'filial_id': str(candidate.company.filial_id),
+        'project_code': 'vhr'
+    }
     response = requests.post(api_url, json=data, auth=(username, password), headers=headers)
+    print(response.text)
+    try:
+        json_response = response.json()
+        print(json_response)
+    except requests.exceptions.JSONDecodeError as e:
+        print(f"JSONDecodeError: {e}")
+        print(response.text)
+
+
+def candidate_photo_upload(candidate):
+    username = candidate.company.login
+    password = candidate.company.password
+    data = {
+        "contact_code": candidate.chat_id,
+        "photo_as_face_rec": "Y",
+        "is_main": "Y",
+        "photo_sha": "\u00000"
+    }
+    print(data)
+    api_url = "https://app.verifix.com/b/vhr/api/v1/core/employee$set_photo"
+    headers = {
+        'filial_id': str(candidate.company.filial_id),
+        'project_code': 'vhr',
+        'Biruniupload': 'param'
+    }
+
+    files = {
+        'files[0]': (None, open(candidate.image.path, 'rb'), 'multipart/form-data')
+    }
+    print(headers)
+    print(files)
+    response = requests.post(api_url, json=data, auth=(username, password), headers=headers, files=files)
     print(response.text)
     try:
         json_response = response.json()

@@ -42,7 +42,10 @@ from apps.main.models import (
     WrittenAnswer,
     Language
 )
-from apps.company.api.views import send_candidate_data_to_api
+from apps.company.api.views import (
+    send_candidate_data_to_api,
+    candidate_photo_upload
+)
 
 
 def regions(update, callback, user, lan):
@@ -660,6 +663,7 @@ def your_resume(update, callback, user, lan):
 def finish_resume(update, callback, user, lan):
     candidate = user.candidate
     send_candidate_data_to_api(candidate)
+    candidate_photo_upload(candidate)
     if user.language == 'uz':
         reply_text = lan['send_finish_resume']
     elif user.language == 'ru':
@@ -834,6 +838,7 @@ def answer_fun(update, callback, user, lan):
             region=candidate.region,
             filial=candidate.filial,
             vacancy=candidate.vacancy,
+            full_name=candidate.full_name,
             first_name=candidate.first_name,
             last_name=candidate.last_name,
             middle_name=candidate.middle_name,
@@ -861,6 +866,7 @@ def answer_fun(update, callback, user, lan):
             region=candidate.region,
             filial=candidate.filial,
             vacancy=candidate.vacancy,
+            full_name=candidate.full_name,
             first_name=candidate.first_name,
             last_name=candidate.last_name,
             middle_name=candidate.middle_name,
