@@ -14,6 +14,9 @@ class Company(models.Model):
     name = models.CharField(max_length=128, unique=True)
     address = models.CharField(max_length=128, null=True, blank=True)
     description = models.TextField(null=True, blank=True)
+    login = models.CharField(max_length=128, null=True, blank=True)
+    password = models.CharField(max_length=128, null=True, blank=True)
+    filial_id = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

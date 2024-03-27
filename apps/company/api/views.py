@@ -98,9 +98,8 @@ class VacancyCreateView(APIView):
 
 
 def send_candidate_data_to_api(candidate):
-    print(candidate.id)
-    username = "askoishbot@pro"
-    password = "123456"
+    username = candidate.company.login
+    password = candidate.company.password
     birthday_str = candidate.birthday.strftime('%d.%m.%Y')
     gender = candidate.gender
     if gender == 'Erkak' or gender == 'Мужчина' or gender == 'Mail':
@@ -112,14 +111,12 @@ def send_candidate_data_to_api(candidate):
 
     write_answers = WrittenAnswer.objects.filter(candidate=candidate)
     write_answer_list = []
-    print('a', write_answers)
     for write_answer in write_answers:
         a = {
             'code': write_answer.write_integration_code,
             'value': write_answer.title
             }
         write_answer_list.append(a)
-        print('s', write_answer_list)
     if candidate.test_status:
         test_failed = 'Y'
     else:
@@ -137,9 +134,6 @@ def send_candidate_data_to_api(candidate):
             first = parts[0]
             middle = ""
             last = ""
-        print(first)
-        print(last)
-        print(middle)
     else:
         first = ''
         last = ''
@@ -176,8 +170,10 @@ def send_candidate_data_to_api(candidate):
     }
     print(data)
     api_url = "https://app.verifix.com/b/vhr/api/v1/pro/candidate$telegram_create"
-
-    response = requests.post(api_url, json=data, auth=(username, password))
+    headers = {
+        'filial_id': candidate.company.filial_id,
+        'project_code': 'vhr'}
+    response = requests.post(api_url, json=data, auth=(username, password), headers=headers)
     print(response.text)
     try:
         json_response = response.json()
