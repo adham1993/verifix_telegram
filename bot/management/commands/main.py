@@ -685,7 +685,11 @@ def finish_resume(update, callback, user, lan):
     user.write_number = 0
     user.save()
     candidate.save()
-    reply_markup = test_start_button(lan)
+    question = Question.objects.filter(vacancy=user.vacancy)
+    if question:
+        reply_markup = test_start_button(lan)
+    else:
+        reply_markup = footer_button_finish(lan)
     update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'finish_resume'
     user.save()

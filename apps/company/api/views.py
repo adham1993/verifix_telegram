@@ -118,14 +118,12 @@ def send_candidate_data_to_api(candidate):
             }
         write_answer_list.append(a)
     if candidate.test_status:
-        test_failed = 'Y'
-    else:
         test_failed = 'N'
-    print(candidate.full_name)
+    else:
+        test_failed = 'Y'
     if candidate.full_name:
         name = candidate.full_name
         parts = name.split(maxsplit=3)
-        print(parts)
         if len(parts) >= 3:
             first, last = parts[:2]
             middle = ' '.join(parts[2:])
@@ -156,7 +154,7 @@ def send_candidate_data_to_api(candidate):
         "email": candidate.email,
         "address": candidate.address,
         "legal_address": candidate.legal_address,
-        "wage_expectation": 1,
+        "wage_expectation": candidate.wage_expectation,
         "note": candidate.note,
         "edu_stage_ids": list(candidate.education.all().values_list('integration_code', flat=True)),
         "job_ids": [],
@@ -177,6 +175,7 @@ def send_candidate_data_to_api(candidate):
         'project_code': 'vhr'
     }
     response = requests.post(api_url, json=data, auth=(username, password), headers=headers)
+    print(response.status_code)
     print(response.text)
     try:
         json_response = response.json()
@@ -189,27 +188,25 @@ def send_candidate_data_to_api(candidate):
 def candidate_photo_upload(candidate):
     username = candidate.company.login
     password = candidate.company.password
-    data = {
-        "contact_code": candidate.chat_id,
-        "photo_as_face_rec": "Y",
-        "is_main": "Y",
-        "photo_sha": "\u00000"
-    }
-    print(data)
-    api_url = "https://app.verifix.com/b/vhr/api/v1/core/employee$set_photo"
+
+    url = "https://app.verifix.com/b/vhr/api/v1/pro/candidate$telegram_photo_set"
+
+    payload = {'param': f'{{"contact_code": "{candidate.chat_id}", "photo_sha": "\\u00000"}}'}
+    files = [
+        ('files[0]',
+         ('photo_2024-02-15_14-56-06.jpg', open(candidate.image.path, 'rb'), 'image/jpeg'))
+    ]
     headers = {
-        'filial_id': str(candidate.company.filial_id),
+        'filial_id': '55302',
         'project_code': 'vhr',
-        'Biruniupload': 'param'
+        'BiruniUpload': 'param',
+        # 'Authorization': 'Basic dGVsZWdyYW1AcHJvOjE='
     }
 
-    files = {
-        'files[0]': (None, open(candidate.image.path, 'rb'), 'multipart/form-data')
-    }
-    print(headers)
-    print(files)
-    response = requests.post(api_url, json=data, auth=(username, password), headers=headers, files=files)
+    response = requests.request("POST", url, headers=headers, data=payload, files=files, auth=(username, password))
+    print(response.status_code)
     print(response.text)
+
     try:
         json_response = response.json()
         print(json_response)

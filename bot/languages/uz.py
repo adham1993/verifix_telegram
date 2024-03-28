@@ -43,7 +43,7 @@ words = {
     'send_note': "O'zingiz haqingida qo'shimcha malumotlar. Ustunlik jihatlarinigiz hamda kamchiklaringizni yuboring 📝",
     'send_language': "Biladigan tilingizni va bilish darajangizni belgilang 👇",
     'send_education': "Bilim darajangizni belgilang",
-    'send_finish_resume': "Malumotlaringiz qabul qilinishi uchun ✅\n\n" "Shu vakansiya bo'yicha qisqa testdan o'tishingiz kerak bo'ladi 👇",
+    'send_finish_resume': "Malumotlaringiz qabul qilinishi uchun ✅\n\n" "Shu vakansiya bo'yicha qisqa testdan o'tishingiz kerak bo'ladi 👇 Agar test topilmasa bosh sahifaqa qaytishingiz mumkin. Hodimlarimiz siz bilan tez orada bo'g'lanishadi.🥳🥳",
     'test_not_found': "Test savollari kiritilmagan.",
     'write_question_not_found': "Savollar kiritilmagan. Orqaga qaytib test ishlashingiz kerak 👇",
     'write_answer_text': "Javoblaringiz qabul qilindi. Orqaga qaytib test ishlashingiz kerak.\n\n" "Agar ishlagan bo'lsangiz orqaga qaytib bosh sahifaga o'ting 👇",

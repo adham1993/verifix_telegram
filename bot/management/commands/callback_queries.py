@@ -56,15 +56,30 @@ def callback_query(update, callback, user, lan):
             else:
                 language_inline_fun(update, callback, user, lan)
         elif query.data.startswith('a') and query.data[1:].isdigit():
+            print('aa', query.data)
+
             language_level_id = int(query.data[1:])
             language_level = LanguageLevel.objects.filter(id=language_level_id).first()
+            print(language_level)
             candidate_language_filter = CandidateLanguages.objects.filter(
                 candidate=user.candidate,
                 vacancy=user.vacancy,
                 language=user.candidate_language
             ).first()
+            print(candidate_language_filter)
             if not candidate_language_filter:
-                pass
+                language_filter = user.candidate_language
+                candidate_language_create = CandidateLanguages.objects.create(
+                    user_profile=user.user_profile,
+                    company=user.company,
+                    candidate=user.candidate,
+                    vacancy=user.vacancy,
+                    language=language_filter,
+                    language_level=language_level
+                )
+                candidate_language_create.save()
+                user.candidate_language = language_filter
+                user.save()
             else:
                 candidate_language_filter.language_level = language_level
                 candidate_language_filter.save()
@@ -90,7 +105,7 @@ def callback_query(update, callback, user, lan):
                     company=user.company,
                     candidate=user.candidate,
                     vacancy=user.vacancy,
-                    language=language_filter
+                    language=language_filter,
                 )
                 candidate_language_create.save()
                 user.candidate_language = language_filter
@@ -105,6 +120,7 @@ def callback_query(update, callback, user, lan):
         education_filter = Education.objects.filter(id=int(query.data)).first()
         if education_filter:
             candidate = user.candidate
+            candidate.education.clear()
             candidate.education.add(education_filter)
             candidate.save()
         else:

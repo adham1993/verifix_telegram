@@ -414,7 +414,7 @@ def handler(update, callback, user, lan):
                 if write_answer_filter:
                     write_answer = WrittenAnswer.objects.filter(candidate=user.candidate, write_question=write_question,
                                                                 user_profile=user_profile_filter).first()
-                    write_answer.title += text
+                    write_answer.title = text
                     write_answer.save()
                 else:
                     write_answer_create = WrittenAnswer.objects.create(
@@ -431,7 +431,7 @@ def handler(update, callback, user, lan):
                 if write_answer_filter:
                     write_answer = WrittenAnswer.objects.filter(candidate=user.candidate, write_question=write_question,
                                                                 user_profile=user_profile_filter).first()
-                    write_answer.title += text
+                    write_answer.title = text
                     write_answer.save()
                 else:
                     write_answer_create = WrittenAnswer.objects.create(
@@ -448,7 +448,7 @@ def handler(update, callback, user, lan):
                 if write_answer_filter:
                     write_answer = WrittenAnswer.objects.filter(candidate=user.candidate, write_question=write_question,
                                                                 user_profile=user_profile_filter).first()
-                    write_answer.title += text
+                    write_answer.title = text
                     write_answer.save()
                 else:
                     write_answer_create = WrittenAnswer.objects.create(

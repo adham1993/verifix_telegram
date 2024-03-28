@@ -44,7 +44,7 @@ words = {
     'send_note': "Provide additional information about yourself. Specify your strengths and areas for improvement 📝",
     'send_language': "Indicate your language proficiency level 👇",
     'send_education': "Indicate your education level",
-    'send_finish_resume': "For your data to be accepted ✅ \n\n" "You will need to take a short test on the same vacancy 👇",
+    'send_finish_resume': "For your data to be accepted ✅ \n\n" "You will need to take a short test on the same vacancy 👇. You can return to the homepage if the test is not found. Our employees will soon choke with you.🥳🥳",
     'test_not_found': "Test questions have not been entered.",
     'write_question_not_found': "Answers have not been entered for the questions. You need to go back and take the test 👇",
     'write_answer_text': "Your answers have been accepted. Please go back and take the test if you have finished \n\n" "If you have finished, please return to the home page 👇",
