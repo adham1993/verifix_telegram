@@ -193,7 +193,8 @@ def handler(update, callback, user, lan):
             vacancies(update, callback, user, lan)
         else:
             user_profile = UserProfile.objects.filter(bot_username=bot_username).first()
-            candidate_filter = Candidate.objects.filter(user_profile=user_profile, vacancy=user.vacancy).first()
+            candidate_filter = Candidate.objects.filter(user_profile=user_profile, vacancy=user.vacancy,
+                                                        company=user.company, bot_user=user).first()
             if not candidate_filter:
                 candidate = Candidate.objects.create(
                     user_profile=user_profile,

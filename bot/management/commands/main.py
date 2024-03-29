@@ -188,7 +188,8 @@ def vacancy_detail(update, callback, user, lan):
 def check_candidate(update, callback, user, lan):
     bot_username = callback.bot.username
     user_profile = UserProfile.objects.filter(bot_username=bot_username).first()
-    candidate_filter = Candidate.objects.filter(user_profile=user_profile, vacancy=user.vacancy).first()
+    candidate_filter = Candidate.objects.filter(user_profile=user_profile, vacancy=user.vacancy,
+                                                company=user.company, bot_user=user).first()
     if candidate_filter:
         if user.language == 'uz':
             reply_text = lan['already_resume']
@@ -661,9 +662,13 @@ def your_resume(update, callback, user, lan):
 
 
 def finish_resume(update, callback, user, lan):
+    question = Question.objects.filter(vacancy=user.vacancy)
     candidate = user.candidate
-    send_candidate_data_to_api(candidate)
-    candidate_photo_upload(candidate)
+    if not question:
+        send_candidate_data_to_api(candidate)
+        candidate_photo_upload(candidate)
+    else:
+        pass
     if user.language == 'uz':
         reply_text = lan['send_finish_resume']
     elif user.language == 'ru':
@@ -685,7 +690,6 @@ def finish_resume(update, callback, user, lan):
     user.write_number = 0
     user.save()
     candidate.save()
-    question = Question.objects.filter(vacancy=user.vacancy)
     if question:
         reply_markup = test_start_button(lan)
     else:
@@ -888,6 +892,8 @@ def answer_fun(update, callback, user, lan):
             education_data=candidate.education_data
         )
         success_candidate_create.save()
+    send_candidate_data_to_api(candidate)
+    candidate_photo_upload(candidate)
     if user.language == 'uz':
         reply_text = lan['data_success']
     elif user.language == 'ru':

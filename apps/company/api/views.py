@@ -125,10 +125,10 @@ def send_candidate_data_to_api(candidate):
         name = candidate.full_name
         parts = name.split(maxsplit=3)
         if len(parts) >= 3:
-            first, last = parts[:2]
+            last, first = parts[:2]
             middle = ' '.join(parts[2:])
         elif len(parts) == 2:
-            first, last = parts
+            last, first = parts
             middle = ""
         else:
             first = parts[0]
