@@ -331,7 +331,6 @@ def candidate_image(update, callback, user, lan):
 @autorization
 def main_phone(update, callback, user, lan):
     if update.callback_query:
-        print('sss')
         if user.type == 'main_phone':
             resume_filter = user.resume_filter
             if not resume_filter.main_phone:
@@ -557,6 +556,8 @@ def language_inline_fun(update, callback, user, lan):
 def education_inline_fun(update, callback, user, lan):
     resume_filter = user.resume_filter
     if not resume_filter.education:
+        user.write_number = 0
+        user.save()
         write_question_start(update, callback, user, lan)
     else:
         if user.language == 'uz':
@@ -577,6 +578,7 @@ def education_inline_fun(update, callback, user, lan):
             else:
                 update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'education_inline_fun'
+        user.write_number = 0
         user.save()
 
 
@@ -837,7 +839,7 @@ def answer_fun(update, callback, user, lan):
     question_count = len(questions)
     check_result = question_count - user.true_count
     if check_result >= 2:
-        candidate.test_status = False
+        candidate.test_status = True
         candidate.save()
         failed_candidate_create = FailedCandidate.objects.create(
             user_profile=candidate.user_profile,
@@ -865,7 +867,7 @@ def answer_fun(update, callback, user, lan):
         )
         failed_candidate_create.save()
     else:
-        candidate.test_status = True
+        candidate.test_status = False
         candidate.save()
         success_candidate_create = SuccessCandidate.objects.create(
             user_profile=candidate.user_profile,

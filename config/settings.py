@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'smart_selects',
     'import_export',
     'rest_framework',
+    'django_cleanup.apps.CleanupConfig',
 ] + APPS
 
 

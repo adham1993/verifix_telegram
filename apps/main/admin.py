@@ -490,7 +490,7 @@ class FailedCandidateAdmin(ImportExportModelAdmin, admin.ModelAdmin):
 
 @admin.register(WrittenQuestion)
 class WrittenQuestionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_profile', 'title_uz')
+    list_display = ('id', 'user_profile', 'title_uz', 'order', 'write_integration_code')
     list_display_links = ('id', 'user_profile', 'title_uz')
     # list_filter = (VacancyListFilter, )
 
@@ -528,8 +528,8 @@ class WrittenQuestionAdmin(admin.ModelAdmin):
 
 @admin.register(WrittenAnswer)
 class WrittenAnswerAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_profile', 'title')
-    list_display_links = ('id', 'user_profile', 'title')
+    list_display = ('id', 'user_profile', 'candidate', 'write_question', 'title')
+    list_display_links = ('id', 'user_profile', 'candidate', 'title')
     # list_filter = (VacancyListFilter, )
 
     def get_exclude(self, request, obj=None):

@@ -222,7 +222,6 @@ def handler(update, callback, user, lan):
             candidate = user.candidate
             candidate.last_name = text
             candidate.save()
-            middle_name(update, callback, user, lan)
     elif user.type == 'full_name':
         if text == lan['back']:
             vacancies(update, callback, user, lan)
