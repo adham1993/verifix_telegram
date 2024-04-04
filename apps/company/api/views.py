@@ -197,7 +197,7 @@ def candidate_photo_upload(candidate):
          ('photo_2024-02-15_14-56-06.jpg', open(candidate.image.path, 'rb'), 'image/jpeg'))
     ]
     headers = {
-        'filial_id': '55302',
+        'filial_id': str(candidate.company.filial_id),
         'project_code': 'vhr',
         'BiruniUpload': 'param',
         # 'Authorization': 'Basic dGVsZWdyYW1AcHJvOjE='

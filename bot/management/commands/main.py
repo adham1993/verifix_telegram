@@ -323,7 +323,10 @@ def candidate_image(update, callback, user, lan):
         else:
             reply_text = lan['send_photo']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, parse_mode='HTML')
+        if update.callback_query:
+            update.callback_query.message.reply_text(text=reply_text, parse_mode='HTML')
+        else:
+            update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'candidate_image'
         user.save()
 
@@ -343,7 +346,11 @@ def main_phone(update, callback, user, lan):
                 else:
                     reply_text = lan['send_main_phone_text']
                 reply_markup = send_contact_main_phone(lan)
-                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+                if update.callback_query:
+                    update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup,
+                                                             parse_mode='HTML')
+                else:
+                    update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
                 user.type = 'extra_phone'
                 user.save()
         elif user.type == 'extra_phone':
@@ -367,7 +374,11 @@ def main_phone(update, callback, user, lan):
                 else:
                     reply_text = lan['send_extra_phone_text']
                 reply_markup = send_contact_extr_phone(lan)
-                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+                if update.callback_query:
+                    update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup,
+                                                             parse_mode='HTML')
+                else:
+                    update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
                 user.type = 'extra_phone2'
                 user.save()
         else:
@@ -386,7 +397,11 @@ def main_phone(update, callback, user, lan):
                 else:
                     reply_text = lan['send_main_phone_text']
                 reply_markup = send_contact_main_phone(lan)
-                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+                if update.callback_query:
+                    update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup,
+                                                             parse_mode='HTML')
+                else:
+                    update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
                 user.type = 'extra_phone'
                 user.save()
         elif user.type == 'extra_phone':
@@ -410,7 +425,11 @@ def main_phone(update, callback, user, lan):
                 else:
                     reply_text = lan['send_extra_phone_text']
                 reply_markup = send_contact_extr_phone(lan)
-                update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
+                if update.callback_query:
+                    update.callback_query.message.reply_text(text=reply_text, reply_markup=reply_markup,
+                                                             parse_mode='HTML')
+                else:
+                    update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
                 user.type = 'extra_phone2'
                 user.save()
         else:
@@ -456,7 +475,10 @@ def email(update, callback, user, lan):
         else:
             reply_text = lan['send_email']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, parse_mode='HTML')
+        if update.callback_query:
+            update.callback_query.message.reply_text(text=reply_text, parse_mode='HTML')
+        else:
+            update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'email'
         user.save()
 
@@ -490,7 +512,10 @@ def legal_address(update, callback, user, lan):
         else:
             reply_text = lan['send_legal_address']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, parse_mode='HTML')
+        if update.callback_query:
+            update.callback_query.message.reply_text(text=reply_text, parse_mode='HTML')
+        else:
+            update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'legal_address'
         user.save()
 
@@ -507,7 +532,10 @@ def wage_expectation(update, callback, user, lan):
         else:
             reply_text = lan['send_wage_expectation']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, parse_mode='HTML')
+        if update.callback_query:
+            update.callback_query.message.reply_text(text=reply_text, parse_mode='HTML')
+        else:
+            update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'wage_expectation'
         user.save()
 
@@ -524,7 +552,10 @@ def node(update, callback, user, lan):
         else:
             reply_text = lan['send_note']
         reply_markup = footer_button(lan)
-        update.message.reply_text(text=reply_text, parse_mode='HTML')
+        if update.callback_query:
+            update.callback_query.message.reply_text(text=reply_text, parse_mode='HTML')
+        else:
+            update.message.reply_text(text=reply_text, parse_mode='HTML')
         user.type = 'node'
     user.save()
 
@@ -698,6 +729,9 @@ def finish_resume(update, callback, user, lan):
         reply_markup = footer_button_finish(lan)
     update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
     user.type = 'finish_resume'
+    candidate = user.candidate
+    candidate.test_status = True
+    candidate.save()
     user.save()
 
 
@@ -829,6 +863,9 @@ def test_start(update, callback, user, lan):
         update.message.reply_text(text=reply_text, reply_markup=reply_markup, parse_mode='HTML')
         user.type = 'test_start'
         user.true_count = 0
+        candidate = user.candidate
+        candidate.test_status = True
+        candidate.save()
         user.save()
 
 
@@ -839,7 +876,7 @@ def answer_fun(update, callback, user, lan):
     question_count = len(questions)
     check_result = question_count - user.true_count
     if check_result >= 2:
-        candidate.test_status = True
+        candidate.test_status = False
         candidate.save()
         failed_candidate_create = FailedCandidate.objects.create(
             user_profile=candidate.user_profile,
@@ -867,7 +904,7 @@ def answer_fun(update, callback, user, lan):
         )
         failed_candidate_create.save()
     else:
-        candidate.test_status = False
+        candidate.test_status = True
         candidate.save()
         success_candidate_create = SuccessCandidate.objects.create(
             user_profile=candidate.user_profile,

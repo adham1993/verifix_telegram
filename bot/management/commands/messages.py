@@ -214,6 +214,8 @@ def handler(update, callback, user, lan):
                 candidate_filter.save()
                 user.candidate = candidate_filter
                 user.save()
+            print(candidate.full_name)
+            print(candidate.extra_phone)
             gender(update, callback, user, lan)
     elif user.type == 'last_name':
         if text == lan['back']:
