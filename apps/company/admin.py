@@ -28,7 +28,7 @@ class CompanyAdmin(admin.ModelAdmin):
 
 @admin.register(Region)
 class RegionAdmin(admin.ModelAdmin):
-    list_display = ('id', 'parent', 'company', 'user_profile', 'name_uz')
+    list_display = ('id', 'parent', 'company', 'user_profile', 'name_uz', 'order', 'integration_code')
     list_display_links = ('id', 'name_uz')
     # exclude = ('company', 'user_profile')
     # list_filter = ('parent', )
@@ -79,7 +79,7 @@ class RegionListFilter(admin.SimpleListFilter):
 
 @admin.register(Filial)
 class FilialAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_profile', 'region', 'company', 'name_uz')
+    list_display = ('id', 'user_profile', 'region', 'company', 'name_uz', 'order')
     list_display_links = ('id', 'user_profile', 'region', 'company', 'name_uz')
     list_filter = (RegionListFilter, )
 
@@ -136,7 +136,7 @@ class FilialListFilter(admin.SimpleListFilter):
 
 @admin.register(Vacancy)
 class VacancyAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user_profile', 'company', 'name_uz')
+    list_display = ('id', 'user_profile', 'company', 'name_uz', 'order')
     list_display_links = ('id', 'user_profile', 'company', 'name_uz')
     list_filter = (FilialListFilter, 'main_office')
 
