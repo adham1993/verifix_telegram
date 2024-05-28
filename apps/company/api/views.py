@@ -157,14 +157,15 @@ def send_candidate_data_to_api(candidate):
         "wage_expectation": candidate.wage_expectation,
         "note": candidate.note,
         "edu_stage_ids": list(candidate.education.all().values_list('integration_code', flat=True)),
-        "job_ids": [],
+        "job_ids": [candidate.vacancy.job_integration_code],
+        "division_ids": [candidate.filial.id],
         "langs": [
             {"lang_id": lang.language.integration_code, "level_id": lang.language_level.integration_code}
             for lang in candidate.candidate_languages.all()
         ],
         "fields": write_answer_list,
         "contact_code": chat_id,
-        "vacancy_id": candidate.vacancy.vacancy_integration_code,
+        "vacancy_id": '',
         "test_failed": test_failed,
         "test_score": candidate.test_score
     }

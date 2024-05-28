@@ -92,6 +92,7 @@ class Vacancy(models.Model):
     order = models.IntegerField(default=0)
     main_office = models.BooleanField(default=False)
     vacancy_integration_code = models.IntegerField(default=0)
+    job_integration_code = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
