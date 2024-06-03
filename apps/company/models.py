@@ -91,8 +91,8 @@ class Vacancy(models.Model):
     lang_en = models.CharField(max_length=64, verbose_name='Язикы', null=True, blank=True)
     order = models.IntegerField(default=0)
     main_office = models.BooleanField(default=False)
-    vacancy_integration_code = models.IntegerField(default=0)
-    job_integration_code = models.IntegerField(default=0)
+    vacancy_integration_code = models.IntegerField(null=True, blank=True)
+    job_integration_code = models.IntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

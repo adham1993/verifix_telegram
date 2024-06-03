@@ -117,6 +117,7 @@ def send_candidate_data_to_api(candidate):
             'value': write_answer.title
             }
         write_answer_list.append(a)
+    print('test_status', candidate.test_status)
     if candidate.test_status:
         test_failed = 'N'
     else:
@@ -142,6 +143,7 @@ def send_candidate_data_to_api(candidate):
         chat_id = 1
     else:
         chat_id = candidate.chat_id
+    print('test_failed==', test_failed)
     data = {
         "first_name": first,
         "last_name": last,
@@ -158,7 +160,7 @@ def send_candidate_data_to_api(candidate):
         "note": candidate.note,
         "edu_stage_ids": list(candidate.education.all().values_list('integration_code', flat=True)),
         "job_ids": [candidate.vacancy.job_integration_code],
-        "division_ids": [candidate.filial.id],
+        "division_ids": [candidate.filial.code],
         "langs": [
             {"lang_id": lang.language.integration_code, "level_id": lang.language_level.integration_code}
             for lang in candidate.candidate_languages.all()
@@ -170,6 +172,7 @@ def send_candidate_data_to_api(candidate):
         "test_score": candidate.test_score
     }
     print(data)
+    print('divition_id', [candidate.filial.code])
     api_url = "https://app.verifix.com/b/vhr/api/v1/pro/candidate$telegram_create"
     headers = {
         'filial_id': str(candidate.company.filial_id),

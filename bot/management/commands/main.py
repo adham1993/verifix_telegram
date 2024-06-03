@@ -698,6 +698,8 @@ def finish_resume(update, callback, user, lan):
     question = Question.objects.filter(vacancy=user.vacancy)
     candidate = user.candidate
     if not question:
+        candidate.test_status = True
+        candidate.save()
         send_candidate_data_to_api(candidate)
         candidate_photo_upload(candidate)
     else:
